@@ -1,0 +1,11 @@
+## Interface: 11302
+## Title: |cffff2200Restocker|r
+## Author: RainForDays
+## Notes: Restock items automatically
+## Version: 3.0
+## DefaultState: enabled
+## SavedVariablesPerCharacter: RestockerDB
+
+
+Poisons.lua
+Restocker.lua
