@@ -1,4 +1,4 @@
-# Restocker 
+# Restocker :package:
 
 #### Restocks items on the list automatically (if checked)
 ### Will only add items that are cached by the client (the item you add must be/have been in your bags/bank(open bank to cache items) during this play session).
