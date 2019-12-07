@@ -81,7 +81,7 @@ function events:MERCHANT_SHOW(event, ...)
 
       -- POISONS
       if poisonReagentsNeeded[itemName] ~= nil then
-          _, _, _, _, _, _, _, itemStackCount = GetItemInfo(itemLink)
+          local _, _, _, _, _, _, _, itemStackCount = GetItemInfo(itemLink)
 
           local buyAmount = poisonReagentsNeeded[itemName]-GetItemCount(itemName, false)
 
