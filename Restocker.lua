@@ -69,12 +69,8 @@ end
 function events:MERCHANT_SHOW(event, ...)
   local menu = core.addon or core:CreateMenu();
   --menu:Show();
-  core:Update()
+  --core:Update()
   if RestockerDB.Items == nil then return end
-
-
-
-  local boughtItems = 0
 
   local poisonReagentsNeeded = core:getPoisonReagents()
 
@@ -94,10 +90,8 @@ function events:MERCHANT_SHOW(event, ...)
           for n = buyAmount, 1, -itemStackCount do
             if n > itemStackCount then
               BuyMerchantItem(i, itemStackCount)
-              boughtItems = boughtItems +1
             else
               BuyMerchantItem(i, n)
-              boughtItems = boughtItems +1
             end
           end
 
@@ -114,15 +108,12 @@ function events:MERCHANT_SHOW(event, ...)
         if restockNum > inPossesion then
           if restockNum > numAvailable and numAvailable > 0 then
             BuyMerchantItem(i, numAvailable)
-            boughtItems = boughtItems +1
           else
             for n = difference, 1, -itemStackCount do
               if n > itemStackCount then
                 BuyMerchantItem(i, itemStackCount)
-                boughtItems = boughtItems +1
               else
                 BuyMerchantItem(i, n)
-                boughtItems = boughtItems +1
               end
             end -- forloop
           end
@@ -130,7 +121,6 @@ function events:MERCHANT_SHOW(event, ...)
       end -- if RestockerDB.Items[itemName] ~= nil
     end -- for loop GetMerchantNumItems()
   end
-  --if boughtItems > 0 then core:Print("Restocker has finished restocking.") end
 end
 
 
@@ -210,7 +200,11 @@ function core:PickupItem()
                       local iitemName, iitemLink, _, _, _, _, _, imaxStack = GetItemInfo(iitemID)
                       local curstackplusdif = istackSize + difference
                       if iitemName == itemName and (curstackplusdif == imaxStack) then
-                        return PickupContainerItem(ibag, islot)
+                        if ibag == 0 then
+                          return PutItemInBackpack()
+                        else
+                          return PutItemInBag(19+ibag)
+                        end
                       end
 
                     end
@@ -499,7 +493,10 @@ function core:addItem(itemName)
     RestockerDB.Items[itemName].amount = 1
     RestockerDB.Items[itemName].itemName = itemName
   end
-  core:addListFrame(itemName, RestockerDB.Items[itemName])
+  local frame = core:addListFrame()
+  frame:Show()
+  frame.text:SetText(itemName)
+  frame.editBox:SetText(RestockerDB.Items[itemName].amount)
   core:Update()
 end
 
