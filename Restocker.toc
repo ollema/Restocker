@@ -6,6 +6,5 @@
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: RestockerDB
 
-
 Poisons.lua
 Restocker.lua
