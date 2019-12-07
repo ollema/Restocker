@@ -4,6 +4,10 @@ core.currentlyRestocking = false
 core.itemsRestocked = {}
 core.restockedItems = false
 core.coroutine = nil
+core.framepool = {}
+core.hiddenFrame = CreateFrame("Frame", nil, UIParent)
+core.hiddenFrame:Hide()
+
 
 function core:Print(...)
   DEFAULT_CHAT_FRAME:AddMessage(tostringall(...))
@@ -30,6 +34,8 @@ function events:ADDON_LOADED(name)
   if RestockerDB["Items"] == nil then RestockerDB["Items"] = {} end
   if RestockerDB["Poisons"] == nil then RestockerDB["Poisons"] = {} end
   if RestockerDB["Poisons"]["minDifference"] == nil then RestockerDB["Poisons"]["minDifference"] = 0 end
+
+
 
 
   SLASH_FRAMESTK1 = "/fs"
@@ -422,35 +428,63 @@ function core:Update()
   local itemlist = RestockerDB.Items
 
 
-
   for k,v in pairs(itemlist) do
     if v.number ~= nil then
       local amount = tonumber(v.number)
       RestockerDB.Items[k].amount = amount
       v.number = nil
     end
+    if v.itemName == nil then
+      local amount = tonumber(v.number)
+      RestockerDB.Items[k].itemName = k
+      v.number = nil
+    end
   end
 
-  -- No items in list and no in frame
-  if itemlist == nil and numChildren == 0 then
-    return
-
-  -- No items in saved variables, delete all frames
-  elseif itemlist == nil and numChildren ~= 0 then
 
 
-  -- Items in list but not in frame
-  elseif itemlist ~= nil  and numChildren == 0 then
+  if numChildren == 0 then
     core:addListFrames()
-
-  -- Items in list and in frame
-  elseif #itemlist < numChildren then
     return
+  end
+
+
+  
+  for i, frame in ipairs(core.framepool) do
+    frame.isInUse = false
+    frame:SetParent(core.hiddenFrame)
+    frame:Hide()
+  end
+
+
+  for itemName, v in pairs(RestockerDB.Items) do
+
+    local frame = core:GetFirstEmpty()
+
+    if frame ~= false then 
+      frame:SetParent(core.addon.scrollChild)
+      frame:Show()
+      frame.isInUse = true
+      frame.editBox:SetText(v.amount)
+      frame.text:SetText(itemName)
+    else
+      core:addListFrame(v.itemName, v)
+    end
+    
   end
 
 end
 
 
+
+function core:GetFirstEmpty() 
+  for i, frame in ipairs(core.framepool) do
+    if not frame.isInUse then 
+      return frame 
+    end
+  end
+  return core:addListFrame()
+end
 -----------------------
 ---- ADD ITEM
 -----------------------
@@ -463,19 +497,17 @@ function core:addItem(itemName)
   if itemName ~= nil then
     RestockerDB.Items[itemName].itemLink = itemLink
     RestockerDB.Items[itemName].amount = 1
+    RestockerDB.Items[itemName].itemName = itemName
   end
   core:addListFrame(itemName, RestockerDB.Items[itemName])
   core:Update()
 end
 
 
-
-
-
 -----------------------
 ---- ADD LIST FRAME
 -----------------------
-function core:addListFrame(k, v)
+function core:addListFrame()
   local listframe = core.addon.scrollChild
   local children = { listframe:GetChildren() };
   local lastChild = children[#children];
@@ -493,7 +525,6 @@ function core:addListFrame(k, v)
   local text = frame:CreateFontString(nil, "OVERLAY");
   text:SetFontObject("GameFontHighlight");
   text:SetPoint("LEFT", frame, "LEFT");
-  text:SetText(k);
   frame.text = text
 
   -- BUTTON
@@ -505,10 +536,10 @@ function core:addListFrame(k, v)
     local item = parent.text:GetText();
 
     RestockerDB.Items[item] = nil
-    parent:SetSize(1,1)
+    --parent:SetSize(1,1)
     --local point, relativeTo, relativePoint, xOfs, yOfs = parent:GetPoint()
     --parent:SetPoint("TOP", -1, -1)
-    parent:Hide();
+    --parent:Hide();
     core:Update();
   end);
 
@@ -517,7 +548,6 @@ function core:addListFrame(k, v)
   editBox:SetSize(40,20)
   editBox:SetPoint("RIGHT", delBtn, "LEFT", 3, 0);
   editBox:SetAutoFocus(false);
-  editBox:SetText(v.amount)
   editBox:SetScript("OnEnterPressed", function(self)
     local amount = tonumber(self:GetText())
     local parent = self:GetParent();
@@ -544,6 +574,10 @@ function core:addListFrame(k, v)
     RestockerDB.Items[item].amount = tonumber(amount)
   end)
   frame.editBox = editBox
+  frame.isInUse = true
+  frame:Show()
+  tinsert(core.framepool, frame)
+  return frame
 end
 
 
@@ -554,6 +588,28 @@ end
 function core:addListFrames()
   local listframe = core.addon.listframe
   for k,v in pairs(RestockerDB.Items) do
-    core:addListFrame(k, v)
+    local frame = core:addListFrame()
+    frame.text:SetText(k)
+    frame.editBox:SetText(v.amount)
+  end
+end
+
+
+
+-- REPOPULATE
+function core:repopulate()
+  local children = { core.addon.scrollChild:GetChildren() }
+  for i, v in ipairs(children) do
+    local c = children[i]
+    c.isInUse = false
+    c:Hide()
+  end
+
+  for itemName, v in ipairs(RestockerDB.Items) do
+    local c = children[i]
+    c:Show()
+    c.isInUse = true
+    c.editbox:SetText(v.amount)
+    c.text:SetText(itemName)
   end
 end
