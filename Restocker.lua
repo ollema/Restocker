@@ -393,7 +393,6 @@ function core:PickupItem()
     local restockNum = v.amount
     local difference = restockNum-numItemsInBags
     local itemLink = v.itemLink
-    core:Print(itemName)
 
     if difference > 0 and numItemsInBank > 0 then
       for k, bbag in ipairs(bankBags) do
@@ -404,7 +403,6 @@ function core:PickupItem()
 
             if itemName == bitemName then
               if difference < bstackSize then
-                core:Print("Splitting " .. difference)
                 SplitContainerItem(bbag, bslot, difference)
 
                 for ibag = 0, NUM_BAG_SLOTS do
@@ -766,43 +764,4 @@ function core:addListFrames()
   for k,v in pairs(RestockerDB.Items) do
     core:addListFrame(k, v)
   end
-end
-
-
-
-
-
------------------------
----- MISC FUNCTIONS
------------------------
-
-local waitTable = {};
-local waitFrame = nil;
-
-function core:wait(delay, func, ...)
-  if(type(delay)~="number" or type(func)~="function") then
-    return false;
-  end
-  if(waitFrame == nil) then
-    waitFrame = CreateFrame("Frame","WaitFrame", UIParent);
-    waitFrame:SetScript("onUpdate",function (self,elapse)
-      local count = #waitTable;
-      local i = 1;
-      while(i<=count) do
-        local waitRecord = tremove(waitTable,i);
-        local d = tremove(waitRecord,1);
-        local f = tremove(waitRecord,1);
-        local p = tremove(waitRecord,1);
-        if(d>elapse) then
-          tinsert(waitTable,i,{d-elapse,f,p});
-          i = i + 1;
-        else
-          count = count - 1;
-          f(unpack(p));
-        end
-      end
-    end);
-  end
-  tinsert(waitTable,{delay,func,{...}});
-  return true;
 end
