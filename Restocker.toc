@@ -2,9 +2,13 @@
 ## Title: |cffff2200Restocker|r
 ## Author: RainForDays
 ## Notes: Restock items automatically
-## Version: 3.5
+## Version: 1.0
 ## DefaultState: enabled
-## SavedVariablesPerCharacter: RestockerDB
+## SavedVariablesPerCharacter: Restocker
 
 Poisons.lua
+Events.lua
+Frames\MainFrame.lua
+Frames\ListFrame.lua
+Helpers\Bank.lua
 Restocker.lua
