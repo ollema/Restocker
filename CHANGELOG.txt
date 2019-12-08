@@ -1,14 +1,25 @@
+4.0
+- Rewrote the entire addon and did a lot of housekeeping
+- Should now be more stable
+- Now supports adding ANY item via itemID
+  - Items added by name still need to be cached by your game.
+- Will now traverse the bankframe in reverse order (from the back).
+  - What this basically accomplishes is better order in the bankframe where items get grabbed from the back first.
+
+
 3.5.2
 - Attempt to fix initialization issues
+
 
 3.5.1
 - Attempt to fix various lua errors
 
+
 3.5
 - Added manual changelog and package handlers
 
-Old
 
+Old
 - Attempt to fix various bugs
 
 

@@ -135,9 +135,12 @@ end
 function core:addItem(text)
   local itemName, itemLink = GetItemInfo(text)
   local itemID
-  if itemLink ~= nil then
+  if itemLink == nil then
+    core.itemWaitTable[text] = true
+    return
+  elseif itemLink ~= nil then
     itemID = string.match(itemLink, "item:(%d+)")
-    for i, item in ipairs(Restocker.Items) do
+    for _, item in ipairs(Restocker.Items) do
       if item.itemName:lower() == itemName:lower() then return end
     end
   end

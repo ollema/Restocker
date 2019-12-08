@@ -1,11 +1,14 @@
 local _, core = ...;
 
+core.itemWaitTable = {}
+
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:RegisterEvent("MERCHANT_SHOW");
 events:RegisterEvent("MERCHANT_CLOSED");
 events:RegisterEvent("BANKFRAME_OPENED");
 events:RegisterEvent("BANKFRAME_CLOSED");
+events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
 events:RegisterEvent("BAG_UPDATE");
 events:SetScript("OnEvent", function(self, event, ...)
   return self[event] and self[event](self, ...)
@@ -143,5 +146,14 @@ function events:BAG_UPDATE(event, ...)
       coroutine.resume(core.coroutine)
     end
 
+  end
+end
+
+
+function events:GET_ITEM_INFO_RECEIVED(itemID, success)
+  if success == nil then return end
+  if core.itemWaitTable[itemID] then
+    core.itemWaitTable[itemID] = nil
+    core:addItem(itemID)
   end
 end
