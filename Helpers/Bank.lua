@@ -1,16 +1,17 @@
 local _, core = ...;
 
 function core:PickupItem()
-  local bankBags = {10,9,8,7,6,5,-1}
+  local bankBags = {-1,5,6,7,8,9,10}
+  local bankBagsReversed = {10,9,8,7,6,5,-1}
 
-  for i, item in ipairs(Restocker.Items) do
+  for _, item in ipairs(Restocker.Items) do
     local numItemsInBags = GetItemCount(item.itemID, false)
     local numItemsInBank = GetItemCount(item.itemID, true) - numItemsInBags
     local restockNum = item.amount
     local difference = restockNum-numItemsInBags
 
     if difference > 0 and numItemsInBank > 0 then
-      for _, bbag in ipairs(bankBags) do
+      for _, bbag in ipairs(bankBagsReversed) do
         for bslot = GetContainerNumSlots(bbag), 1, -1 do
           local _, bstackSize, _, _, _, _, bitemLink, _, _, bitemID = GetContainerItemInfo(bbag, bslot)
           if bitemLink ~= nil then
@@ -18,7 +19,7 @@ function core:PickupItem()
 
             if item.itemName == bitemName then
               if difference < bstackSize then
-                SplitContainerItem(bbag, bslot, difference)
+                SplitContainerItem(bbag, bslot, tonumber(difference))
 
                 for ibag = 0, NUM_BAG_SLOTS do
                   for islot = 1, GetContainerNumSlots(ibag) do
@@ -60,7 +61,20 @@ function core:PickupItem()
         end -- for bankslots
       end -- for bankbags
       return
-    end -- if difference > 0
+    elseif difference < 0 then
+      local posdifference = difference*-1 -- turn negative number to positive
+      for ibag = NUM_BAG_SLOTS, 0, -1 do -- loop backwards through bags
+        for islot = GetContainerNumSlots(ibag), 1, -1 do -- loop backward through bagslots
+          local _, istackSize, _, _, _, _, iitemLink, _, _, iitemID = GetContainerItemInfo(ibag, islot)
+          if iitemLink ~= nil then -- slot contains an item
+            local iitemName = GetItemInfo(iitemID)
+            if iitemName == item.itemName then
+              return UseContainerItem(ibag, islot)
+            end
+          end -- invitemlink ~= nil
+        end -- for numslots
+      end -- for numbags
+    end
   end -- for each Restocker.Item
 
 

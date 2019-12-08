@@ -132,6 +132,7 @@ end
 
 function events:BAG_UPDATE(event, ...)
   if core.currentlyRestocking == true then
+    if GetCursorInfo() == "item" then return end
     if type(core.coroutine) == nil then
       if coroutine.status(core.coroutine) ~= "running" then
         core.coroutine = coroutine.create(function()

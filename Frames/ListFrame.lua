@@ -39,9 +39,13 @@ function core:addListFrame()
   editBox:SetPoint("RIGHT", delBtn, "LEFT", 3, 0);
   editBox:SetAutoFocus(false);
   editBox:SetScript("OnEnterPressed", function(self)
-    local amount = tonumber(self:GetText())
-    local parent = self:GetParent();
-    local text = parent.text:GetText();
+    local amount = self:GetText()
+    local parent = self:GetParent()
+    local text = parent.text:GetText()
+
+    if amount == "" then
+      amount = 0;
+    end
 
     for _, item in ipairs(Restocker.Items) do
       if item.itemName == text then
@@ -52,9 +56,9 @@ function core:addListFrame()
 
   end);
   editBox:SetScript("OnKeyUp", function(self)
-    local amount = self:GetText();
-    local parent = self:GetParent();
-    local item = parent.text:GetText();
+    local amount = self:GetText()
+    local parent = self:GetParent()
+    local item = parent.text:GetText()
 
     if amount == "" then
       amount = 0;
