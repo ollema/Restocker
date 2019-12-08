@@ -1,3 +1,7 @@
+4.0.1
+- Will not put excess stock into bank
+
+
 4.0
 - Rewrote the entire addon and did a lot of housekeeping
 - Should now be more stable
