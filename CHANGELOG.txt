@@ -1,40 +1,46 @@
+3.5.2
+- Attempt to fix initialization issues
+
+3.5.1
+- Attempt to fix various lua errors
+
 3.5
--Added manual changelog and package handlers
+- Added manual changelog and package handlers
 
 Old
 
--attempt to fix various bugs
+- Attempt to fix various bugs
 
 
--Updated bank restocking, slightly slower but far more accurate and reliable
--No longer restocks poison reagents from bank
--Removed summary of what was restocked from bank (it bugged out super hard and were reporting numbers twice or three times higher than they should be)
+- Updated bank restocking, slightly slower but far more accurate and reliable
+- No longer restocks poison reagents from bank
+- Removed summary of what was restocked from bank (it bugged out super hard and were reporting numbers twice or three times higher than they should be)
 
 
--Added scroll frame
--Added summary of what items were restocked when restocking from bank (vendor already does this because you see what you bought)
+- Added scroll frame
+- Added summary of what items were restocked when restocking from bank (vendor already does this because you see what you bought)
 
 
--Fixed lua error when restocking from bank
+- Fixed lua error when restocking from bank
 
 
--Fixed lua error
+- Fixed lua error
 
 
--Added support for restocking from bank.
-  -Poisons are supported but could be super bugged (i dont personally restock from bank so hard for me to think of all different situations)
+- Added support for restocking from bank.
+  - Poisons are supported but could be super bugged (i dont personally restock from bank so hard for me to think of all different situations)
 
 
--Fixed issue that appeard when number was prefixed with a 0. Now automatically deletes a leading 0 from numbers.
+- Fixed issue that appeard when number was prefixed with a 0. Now automatically deletes a leading 0 from numbers.
 
 
--Now supports Poisons and will auto restock the reagents.
--Added field for the minimum amount of missing poisons before the addon restocks on the reagents (to avoid restocking for 1 poison)
+- Now supports Poisons and will auto restock the reagents.
+- Added field for the minimum amount of missing poisons before the addon restocks on the reagents (to avoid restocking for 1 poison)
 
 
--Extended input box to accommodate for four digit numbers.
+- Extended input box to accommodate for four digit numbers.
 
 
--Updated logics for faster restocking
--Now buys multiple stacks if amount is above a stacksize
--Updated login message with instructions on how to open the window
+- Updated logics for faster restocking
+- Now buys multiple stacks if amount is above a stacksize
+- Updated login message with instructions on how to open the window
