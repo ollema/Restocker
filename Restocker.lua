@@ -125,16 +125,14 @@ end
 
 
 function events:MERCHANT_CLOSED(event, ...)
-  core.addon:Hide();
+  local menu = core.addon or core:CreateMenu();
+  menu:Hide();
 end
 
 function events:BANKFRAME_CLOSED(event, ...)
+  local menu = core.addon or core:CreateMenu();
   core.currentlyRestocking = false
-  core.addon:Hide();
-end
-
-function events:MERCHANT_CLOSED(event, ...)
-  core.addon:Hide();
+  menu:Hide();
 end
 
 
