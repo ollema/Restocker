@@ -19,8 +19,15 @@ function events:ADDON_LOADED(name)
 
   if Restocker == nil then Restocker = {} end
   if Restocker["AutoBuy"] == nil then Restocker["AutoBuy"] = true end
-  if Restocker["Items"] == nil then Restocker["Items"] = {} end
-
+  if Restocker["Items"] == nil and Restocker["profiles"] == nil then Restocker["Items"] = {} end
+  if Restocker.profiles == nil then Restocker["profiles"] = {} end
+  if Restocker.profiles == nil and #Restocker.Items > 0 then
+    Restocker.profiles.default = Restocker.Items
+  end
+  if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
+  Restocker.Items = nil
+ 
+  
 
   local f=InterfaceOptionsFrame;
   f:SetMovable(true);
@@ -41,16 +48,16 @@ end
 
 function events:MERCHANT_SHOW()
   --local menu = core.addon or core:CreateMenu();
-  if Restocker.Items == nil then return end
+  if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   local poisonReagentsNeeded = core:getPoisonReagents()
   local buyTable = {}
-
-
+  
 
   if Restocker.AutoBuy == true then
+    local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
-    for _, item in ipairs(Restocker.Items) do
+    for _, item in ipairs(currentProfile) do
       local numInBags = GetItemCount(item.itemName, false)
       local numNeeded = item.amount - numInBags
       if numNeeded > 0 then
