@@ -1,5 +1,5 @@
 4.0.1
-- Will not put excess stock into bank
+- Will now put excess stock into bank
 
 
 4.0
