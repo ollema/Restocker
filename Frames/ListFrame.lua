@@ -25,9 +25,9 @@ function core:addListFrame()
     local parent = self:GetParent();
     local text = parent.text:GetText();
 
-    for i, item in ipairs(Restocker.Items) do
+    for i, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
-        Restocker.Items[i] = nil
+        Restocker.profiles[Restocker.currentProfile][i] = nil
       end
     end
     core:Update();
@@ -47,7 +47,7 @@ function core:addListFrame()
       amount = 0;
     end
 
-    for _, item in ipairs(Restocker.Items) do
+    for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
         item.amount = tonumber(amount)
       end
@@ -66,7 +66,7 @@ function core:addListFrame()
 
     self:SetText(amount);
 
-    for _, item in ipairs(Restocker.Items) do
+    for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
         item.amount = tonumber(amount)
       end
@@ -82,7 +82,7 @@ end
 
 
 function core:addListFrames()
-  for _, item in ipairs(Restocker.Items) do
+  for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
     local frame = core:addListFrame()
     frame.text:SetText(item.itemName)
     frame.editBox:SetText(item.amount)
