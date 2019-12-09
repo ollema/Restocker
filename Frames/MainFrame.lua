@@ -133,6 +133,8 @@ end
 
 
 function core:addItem(text)
+  local currentProfile = Restocker.profiles[Restocker.currentProfile]
+  
   local itemName, itemLink = GetItemInfo(text)
   local itemID
   if itemLink == nil then
@@ -140,7 +142,7 @@ function core:addItem(text)
     return
   elseif itemLink ~= nil then
     itemID = string.match(itemLink, "item:(%d+)")
-    for _, item in ipairs(Restocker.Items) do
+    for _, item in ipairs(currentProfile) do
       if item.itemName:lower() == itemName:lower() then return end
     end
   end
@@ -151,7 +153,7 @@ function core:addItem(text)
   T.itemLink = itemLink
   T.itemID = itemID
   T.amount = 1
-  tinsert(Restocker.Items, T)
+  tinsert(Restocker.profiles[Restocker.currentProfile], T)
 
   core:Update()
 end
