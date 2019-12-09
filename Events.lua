@@ -18,16 +18,21 @@ function events:ADDON_LOADED(name)
   if name ~= "Restocker" then return end
 
   if Restocker == nil then Restocker = {} end
-  if Restocker["AutoBuy"] == nil then Restocker["AutoBuy"] = true end
-  if Restocker["Items"] == nil and Restocker["profiles"] == nil then Restocker["Items"] = {} end
-  if Restocker.profiles == nil then Restocker["profiles"] = {} end
-  if Restocker.profiles == nil and #Restocker.Items > 0 then
+
+  -- OLD RESTOCKER
+  if Restocker.AutoBuy == nil and Restocker.autoBuy == nil then Restocker.AutoBuy = true end
+  if Restocker.Items == nil and Restocker.profiles == nil then Restocker.Items = {} end
+
+  -- NEW RESTOCKER
+  if Restocker.autoBuy == nil then Restocker.autoBuy = true end
+  if Restocker.profiles == nil then Restocker.profiles = {} end
+  if #Restocker.profiles == 0 and Restocker.Items ~= nil then
     Restocker.profiles.default = Restocker.Items
   end
   if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
   Restocker.Items = nil
- 
-  
+
+
 
   local f=InterfaceOptionsFrame;
   f:SetMovable(true);
@@ -47,14 +52,16 @@ end
 
 
 function events:MERCHANT_SHOW()
-  --local menu = core.addon or core:CreateMenu();
+  local menu = core.addon or core:CreateMenu();
+  menu:Show()
+
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   local poisonReagentsNeeded = core:getPoisonReagents()
   local buyTable = {}
   
 
-  if Restocker.AutoBuy == true then
+  if Restocker.autoBuy == true then
     local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
     for _, item in ipairs(currentProfile) do
@@ -108,7 +115,7 @@ function events:MERCHANT_SHOW()
             end
           end -- forloop
         end
-      end -- if Restocker.Items[itemName] ~= nil
+      end -- if buyTable[itemName] ~= nil
     end -- for loop GetMerchantNumItems()
   end
 end
@@ -126,7 +133,11 @@ end
 
 
 function events:BANKFRAME_OPENED(event, ...)
-  if Restocker.Items == nil then return end
+  if Restocker.profiles[Restocker.currentProfile] == nil then return end
+  
+  local menu = core.addon or core:CreateMenu();
+  menu:Show()
+
   core.currentlyRestocking = true
   core:PickupItem()
 end

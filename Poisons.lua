@@ -100,7 +100,7 @@ core.poisons = poisons;
 
 function core:getPoisonReagents()
   local neededReagents = {}
-  for _, item in ipairs(Restocker.Items) do
+  for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
     if string.find(item.itemName:lower(), "poison") ~= nil then
       local restockNum = item.amount
       local inPossesion = GetItemCount(item.itemID, true)

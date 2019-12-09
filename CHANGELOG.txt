@@ -1,3 +1,10 @@
+5.0
+- Implemented profiles
+  - use "/rs profiles" for more information on how to add/delete/copy/rename profiles
+  - switching profiles is done with the dropdown on the addon frame
+  - addon frame now shows when talking to bank and merchant for easy switching of profiles
+
+
 4.0.2
 - Preimplementation of profiles
 

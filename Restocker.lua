@@ -7,27 +7,77 @@ core.coroutine = nil
 core.framepool = {}
 core.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
 
+core.defaults = {
+  prefix = "|cffff2200Restocker|r ",
+  color = "ff2200",
+  slash = "|cffff2200/rs|r "
+}
+
 
 function core:Print(...)
   DEFAULT_CHAT_FRAME:AddMessage(tostringall(...))
 end
 
 
+
+core.commands = {
+  show = core.defaults.slash .. "show - Show the addon",
+  profile = {
+    add = core.defaults.slash .. "profile add [name] - Adds a profile with [name]",
+    delete = core.defaults.slash .. "profile delete [name] - Deletes profile with [name]",
+    rename = core.defaults.slash .. "profile rename [name] - Renames current profile to [name]",
+    copy = core.defaults.slash .. "profile copy [name] - Copies profile [name] into current profile.",
+  }
+}
+
 --[[
   SLASH COMMANDS
 ]]
 function core:SlashCommand(args)
-  local command, subcommand = strsplit(" ", args, 2)
-  if command == "reset" then
-    Restocker = {}
-    Restocker["AutoBuy"] = true
-    Restocker["Items"] = {}
-    return
-  elseif command == "show" then
+  local command, rest = strsplit(" ", args, 2)
+  command = command:lower()
+
+  if command == "show" then
     local menu = core.addon or core:CreateMenu()
     menu:Show()
-  elseif command == "rename" then
-    core:RenameCurrentProfile(subcommand)
+
+  elseif command == "profile" then
+    if rest == "" or rest == nil then
+      for _,v in pairs(core.commands.profile) do
+        core:Print(v)
+      end
+      return
+    end
+
+    local subcommand, name = strsplit(" ", rest, 2)
+
+
+    if subcommand == "add" then
+      core:AddProfile(name)
+
+    elseif subcommand == "delete" then
+      core:DeleteProfile(name)
+
+    elseif subcommand == "rename" then
+      core:RenameCurrentProfile(name)
+
+    elseif subcommand == "copy" then
+      core:CopyProfile(name)
+    end
+
+  elseif command == "help" then
+
+    for _, v in pairs(core.commands) do
+      if type(v) == "table" then
+        for _, vv in pairs(v) do
+          core:Print(vv)
+        end
+      else
+        core:Print(v)
+      end
+    end
+    return
+
   else
     local menu = core.addon or core:CreateMenu()
     menu:SetShown(not menu:IsShown())
@@ -45,6 +95,7 @@ function core:Update()
   for _, f in ipairs(core.framepool) do
     f.isInUse = false
     f:SetParent(core.hiddenFrame)
+    f:Hide()
   end
 
   for _, item in ipairs(currentProfile) do
@@ -53,6 +104,7 @@ function core:Update()
     f.isInUse = true
     f.editBox:SetText(item.amount)
     f.text:SetText(item.itemName)
+    f:Show()
   end
 
   local height = 0
@@ -63,7 +115,9 @@ function core:Update()
 end
 
 
-
+--[[
+  GET FIRST UNUSED SCROLLCHILD FRAME
+]]
 function core:GetFirstEmpty()
   for i, frame in ipairs(core.framepool) do
     if not frame.isInUse then
@@ -74,20 +128,74 @@ function core:GetFirstEmpty()
 end
 
 
+
 --[[
-  RENAME PROFILE
-]] 
-function core:RenameCurrentProfile(newName)
-  local currentProfile = Restocker.currentProfile
+  ADD PROFILE
+]]
+function core:AddProfile(newProfile)
+  Restocker.currentProfile = newProfile
+  Restocker.profiles[newProfile] = {}
   
-  Restocker.profiles[newName] = Restocker.profiles[currentProfile]
-  Restocker.profiles[currentProfile] = nil
-  
-  Restocker.currentProfile = newName
+  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+  core:Update()
 end
 
 
+--[[
+  DELETE PROFILE
+]]
+function core:DeleteProfile(profile)
+  local currentProfile = Restocker.currentProfile
+
+  if currentProfile == profile then
+    if #Restocker.profiles > 1 then
+      Restocker.profiles[currentProfile] = nil
+      Restocker.currentProfile = Restocker.profiles[1]
+    else
+      Restocker.profiles[currentProfile] = nil
+      Restocker.currentProfile = "default"
+      Restocker.profiles.default = {}
+    end
+
+  else
+    Restocker.profiles[profile] = nil
+  end
+
+  
+  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+ 
+end
+
+--[[
+  RENAME PROFILE
+]]
+function core:RenameCurrentProfile(newName)
+  local currentProfile = Restocker.currentProfile
+
+  Restocker.profiles[newName] = Restocker.profiles[currentProfile]
+  Restocker.profiles[currentProfile] = nil
+
+  Restocker.currentProfile = newName
+
+  
+  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+end
+
+
+--[[
+  CHANGE PROFILE
+]]
 function core:ChangeProfile(newProfile)
   Restocker.currentProfile = newProfile
+  core:Update()
+end
+
+
+--[[
+  COPY PROFILE
+]]
+function core:CopyProfile(profileToCopy)
+  local copyProfile = CopyTable(Restocker.profiles[profileToCopy])
+  Restocker.profiles[Restocker.currentProfile] = copyProfile
   core:Update()
 end
