@@ -3,8 +3,8 @@ local _, core = ...;
 function core:PickupItem()
   local bankBags = {-1,5,6,7,8,9,10}
   local bankBagsReversed = {10,9,8,7,6,5,-1}
-
-  for _, item in ipairs(Restocker.Items) do
+  local currentProfile = Restocker.profiles[Restocker.currentProfile]
+  for _, item in ipairs(currentProfile) do
     local numItemsInBags = GetItemCount(item.itemID, false)
     local numItemsInBank = GetItemCount(item.itemID, true) - numItemsInBags
     local restockNum = item.amount
