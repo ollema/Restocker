@@ -1,3 +1,7 @@
+4.0.2
+- Preimplementation of profiles
+
+
 4.0.1
 - Will now put excess stock into bank
 
