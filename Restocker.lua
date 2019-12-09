@@ -6,7 +6,6 @@ core.restockedItems = false
 core.coroutine = nil
 core.framepool = {}
 core.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
-core.currentProfile
 
 
 function core:Print(...)
@@ -18,15 +17,17 @@ end
   SLASH COMMANDS
 ]]
 function core:SlashCommand(args)
-  local farg = select(1, args)
-  if farg == "reset" then
+  local command, subcommand = strsplit(" ", args, 2)
+  if command == "reset" then
     Restocker = {}
     Restocker["AutoBuy"] = true
     Restocker["Items"] = {}
     return
-  elseif farg == "show" then
+  elseif command == "show" then
     local menu = core.addon or core:CreateMenu()
     menu:Show()
+  elseif command == "rename" then
+    core:RenameCurrentProfile(subcommand)
   else
     local menu = core.addon or core:CreateMenu()
     menu:SetShown(not menu:IsShown())
@@ -39,14 +40,14 @@ end
   UPDATE
 ]] 
 function core:Update()
-
+  local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
   for _, f in ipairs(core.framepool) do
     f.isInUse = false
     f:SetParent(core.hiddenFrame)
   end
 
-  for _, item in ipairs(Restocker.Items) do
+  for _, item in ipairs(currentProfile) do
     local f = core:GetFirstEmpty()
     f:SetParent(core.addon.scrollChild)
     f.isInUse = true
@@ -77,8 +78,16 @@ end
   RENAME PROFILE
 ]] 
 function core:RenameCurrentProfile(newName)
-  local currentProfile = core.currentProfile
+  local currentProfile = Restocker.currentProfile
+  
   Restocker.profiles[newName] = Restocker.profiles[currentProfile]
   Restocker.profiles[currentProfile] = nil
-  core.currentProfile = newName
+  
+  Restocker.currentProfile = newName
+end
+
+
+function core:ChangeProfile(newProfile)
+  Restocker.currentProfile = newProfile
+  core:Update()
 end
