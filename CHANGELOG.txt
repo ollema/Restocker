@@ -1,4 +1,4 @@
-5.0.1
+5.0.2
 - Higher frame strata, should now not clip with other windows
 - Fixed addon saving position between reloads/logouts
 - Fixed autoclose when bank window closes
