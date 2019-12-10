@@ -10,5 +10,6 @@ Poisons.lua
 Events.lua
 Frames\MainFrame.lua
 Frames\ListFrame.lua
+Frames\OptionsPanel.lua
 Helpers\Bank.lua
 Restocker.lua

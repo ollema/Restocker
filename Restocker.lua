@@ -78,6 +78,11 @@ function core:SlashCommand(args)
     end
     return
 
+  elseif command == "config" then
+    InterfaceOptionsFrame_OpenToCategory(core.optionsPanel)
+    InterfaceOptionsFrame_OpenToCategory(core.optionsPanel)
+    return
+
   else
     local menu = core.addon or core:CreateMenu()
     menu:SetShown(not menu:IsShown())
@@ -88,7 +93,7 @@ end
 
 --[[
   UPDATE
-]] 
+]]
 function core:Update()
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
@@ -135,7 +140,7 @@ end
 function core:AddProfile(newProfile)
   Restocker.currentProfile = newProfile
   Restocker.profiles[newProfile] = {}
-  
+
   UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
   core:Update()
 end
@@ -161,9 +166,9 @@ function core:DeleteProfile(profile)
     Restocker.profiles[profile] = nil
   end
 
-  
+
   UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
- 
+
 end
 
 --[[
@@ -177,7 +182,7 @@ function core:RenameCurrentProfile(newName)
 
   Restocker.currentProfile = newName
 
-  
+
   UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
 end
 

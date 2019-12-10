@@ -32,7 +32,8 @@ function events:ADDON_LOADED(name)
   if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
   Restocker.Items = nil
   if Restocker.framePos == nil then Restocker.framePos = {} end
-
+  if Restocker.vendorAutoOpen == nil then Restocker.vendorAutoOpen = false end
+  if Restocker.bankAutoOpen == nil then Restocker.bankAutoOpen = true end
 
 
   local f=InterfaceOptionsFrame;
@@ -49,13 +50,16 @@ function events:ADDON_LOADED(name)
     core:SlashCommand(msg)
   end
   core:Print("|cffff2200Restocker|r by |cffFFF569Mayushi|r on |cffff0000Gehennas|r. /rs or /restocker to open addon frame.")
+  core:CreateOptionsMenu()
 end
 
 
 function events:MERCHANT_SHOW()
-  local menu = core.addon or core:CreateMenu();
-  menu:Show()
-  core:Update()
+  if Restocker.vendorAutoOpen then
+    local menu = core.addon or core:CreateMenu();
+    menu:Show()
+    core:Update()
+  end
 
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
@@ -137,9 +141,11 @@ end
 function events:BANKFRAME_OPENED(event, ...)
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
-  local menu = core.addon or core:CreateMenu();
-  menu:Show()
-  core:Update()
+  if Restocker.bankAutoOpen then
+    local menu = core.addon or core:CreateMenu();
+    menu:Show()
+    core:Update()
+  end
 
   core.currentlyRestocking = true
   core:PickupItem()
