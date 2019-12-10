@@ -48,20 +48,22 @@ function core:CreateOptionsMenu()
   optionsPanel.bankAutoOpenText = bankAutoOpenText
 
 
+
+  -- Profiles
   local profilesHeader = optionsPanel:CreateFontString(nil, "OVERLAY")
   profilesHeader:SetPoint("TOPLEFT", bankAutoOpen, "BOTTOMLEFT", -10, -20)
   profilesHeader:SetFontObject("GameFontNormalLarge")
   profilesHeader:SetText("Profiles")
 
   local addProfileEditBox = CreateFrame("EditBox", nil, optionsPanel, "InputBoxTemplate")
-  addProfileEditBox:SetSize(123, 20)
-  addProfileEditBox:SetPoint("TOPLEFT", profilesHeader, "BOTTOMLEFT", 5, -10)
+  addProfileEditBox:SetSize(124, 20)
+  addProfileEditBox:SetPoint("TOPLEFT", profilesHeader, "BOTTOMLEFT", 15, -10)
   addProfileEditBox:SetAutoFocus(false)
   optionsPanel.addProfileEditBox = addProfileEditBox
 
   local addProfileButton = CreateFrame("Button", nil, optionsPanel, "GameMenuButtonTemplate")
   addProfileButton:SetPoint("LEFT", addProfileEditBox, "RIGHT")
-  addProfileButton:SetSize(75, 25);
+  addProfileButton:SetSize(95, 28);
   addProfileButton:SetText("Add profile");
   addProfileButton:SetNormalFontObject("GameFontNormal");
   addProfileButton:SetHighlightFontObject("GameFontHighlight");
@@ -99,8 +101,22 @@ function core:CreateOptionsMenu()
       UIDropDownMenu_AddButton(info, 1)
     end
   end
-
   optionsPanel.deleteProfileMenu = deleteProfileMenu
+
+
+
+  local deleteProfileButton = CreateFrame("Button", nil, optionsPanel, "GameMenuButtonTemplate")
+  deleteProfileButton:SetPoint("LEFT", deleteProfileMenu, "RIGHT", 108, 3)
+  deleteProfileButton:SetSize(95, 28);
+  deleteProfileButton:SetText("Delete profile");
+  deleteProfileButton:SetNormalFontObject("GameFontNormal");
+  deleteProfileButton:SetHighlightFontObject("GameFontHighlight");
+  deleteProfileButton:SetScript("OnClick", function(self, button, down)
+    core:DeleteProfile(Restocker.profileSelectedForDeletion)
+  end);
+  optionsPanel.deleteProfileButton = deleteProfileButton
+
+
 
   core.optionsPanel = optionsPanel
   InterfaceOptions_AddCategory(optionsPanel)

@@ -172,6 +172,9 @@ function core:DeleteProfile(profile)
   end
 
 
+  UIDropDownMenu_SetText(core.optionsPanel.deleteProfileMenu, "")
+  local menu = core.addon or core:CreateMenu()
+  Restocker.profileSelectedForDeletion = ""
   UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
 
 end
