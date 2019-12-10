@@ -54,6 +54,7 @@ end
 function events:MERCHANT_SHOW()
   local menu = core.addon or core:CreateMenu();
   menu:Show()
+  core:Update()
 
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
@@ -137,7 +138,8 @@ function events:BANKFRAME_OPENED(event, ...)
   
   local menu = core.addon or core:CreateMenu();
   menu:Show()
-
+  core:Update()
+  
   core.currentlyRestocking = true
   core:PickupItem()
 end
