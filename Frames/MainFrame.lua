@@ -8,11 +8,12 @@ function core:CreateMenu()
   --[[
     FRAME
   ]]
+
   local addon = CreateFrame("Frame", "RestockerMainFrame", UIParent, "BasicFrameTemplate");
   addon.width = 250
   addon.height = 400
   addon:SetSize(addon.width, addon.height);
-  addon:SetPoint("RIGHT", UIParent, "RIGHT", -5, 0);
+  addon:SetPoint(Restocker.framePos.point or "RIGHT", UIParent, Restocker.framePos.relativePoint or "RIGHT", Restocker.framePos.xOfs or -5, Restocker.framePos.yOfs or 0);
   addon:SetFrameStrata("FULLSCREEN");
   addon:SetMovable(true)
   addon:EnableMouse(true)
@@ -197,7 +198,7 @@ end
 
 function core:addItem(text)
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
-  
+
   local itemName, itemLink = GetItemInfo(text)
   local itemID
   if itemLink == nil then
