@@ -1,3 +1,10 @@
+5.1
+- Added interface options panel
+  - /rs config or using the interface options and going to Restocker
+- Added toggles for autoshowing frame when visiting bank/vendor
+- Added profiles creating/deletion to options panel
+
+
 5.0.2
 - Higher frame strata, should now not clip with other windows
 - Fixed addon saving position between reloads/logouts
