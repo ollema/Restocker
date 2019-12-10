@@ -34,6 +34,7 @@ function events:ADDON_LOADED(name)
   if Restocker.framePos == nil then Restocker.framePos = {} end
   if Restocker.vendorAutoOpen == nil then Restocker.vendorAutoOpen = false end
   if Restocker.bankAutoOpen == nil then Restocker.bankAutoOpen = true end
+  if Restocker.profileSelectedForDeletion == nil then Restocker.profileSelectedForDeletion = "" end
 
 
   local f=InterfaceOptionsFrame;

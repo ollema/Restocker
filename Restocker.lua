@@ -141,8 +141,13 @@ function core:AddProfile(newProfile)
   Restocker.currentProfile = newProfile
   Restocker.profiles[newProfile] = {}
 
-  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+  local menu = core.addon or core:CreateMenu()
+  menu:Show()
   core:Update()
+
+  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+
+
 end
 
 
