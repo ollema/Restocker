@@ -147,6 +147,8 @@ end
 
 function events:BANKFRAME_CLOSED(event, ...)
   core.currentlyRestocking = false
+  local menu = core.addon or core:CreateMenu();
+  menu:Hide()
 end
 
 
