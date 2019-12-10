@@ -1,7 +1,6 @@
 local _, core = ...;
 
 core.itemWaitTable = {}
-
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:RegisterEvent("MERCHANT_SHOW");
@@ -10,6 +9,7 @@ events:RegisterEvent("BANKFRAME_OPENED");
 events:RegisterEvent("BANKFRAME_CLOSED");
 events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
 events:RegisterEvent("BAG_UPDATE");
+events:RegisterEvent("PLAYER_LOGOUT");
 events:SetScript("OnEvent", function(self, event, ...)
   return self[event] and self[event](self, ...)
 end)
@@ -31,6 +31,7 @@ function events:ADDON_LOADED(name)
   end
   if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
   Restocker.Items = nil
+  if Restocker.framePos == nil then Restocker.framePos = {} end
 
 
 
@@ -60,7 +61,7 @@ function events:MERCHANT_SHOW()
 
   local poisonReagentsNeeded = core:getPoisonReagents()
   local buyTable = {}
-  
+
 
   if Restocker.autoBuy == true then
     local currentProfile = Restocker.profiles[Restocker.currentProfile]
@@ -135,11 +136,11 @@ end
 
 function events:BANKFRAME_OPENED(event, ...)
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
-  
+
   local menu = core.addon or core:CreateMenu();
   menu:Show()
   core:Update()
-  
+
   core.currentlyRestocking = true
   core:PickupItem()
 end
@@ -179,4 +180,17 @@ function events:GET_ITEM_INFO_RECEIVED(itemID, success)
     core.itemWaitTable[itemID] = nil
     core:addItem(itemID)
   end
+end
+
+
+
+function events:PLAYER_LOGOUT()
+  if Restocker.framePos == nil then Restocker.framePos = {} end
+
+  local point, relativeTo, relativePoint, xOfs, yOfs = core.addon:GetPoint(core.addon:GetNumPoints())
+
+  Restocker.framePos.point = point
+  Restocker.framePos.relativePoint = relativePoint
+  Restocker.framePos.xOfs = xOfs
+  Restocker.framePos.yOfs = yOfs
 end
