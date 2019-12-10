@@ -13,7 +13,7 @@ function core:CreateMenu()
   addon.height = 400
   addon:SetSize(addon.width, addon.height);
   addon:SetPoint("RIGHT", UIParent, "RIGHT", -5, 0);
-  addon:SetFrameStrata("HIGH");
+  addon:SetFrameStrata("FULLSCREEN");
   addon:SetMovable(true)
   addon:EnableMouse(true)
   addon:RegisterForDrag("LeftButton")
