@@ -1,3 +1,9 @@
+5.0.1
+- Higher frame strata, should now not clip with other windows
+- Fixed addon saving position between reloads/logouts
+- Fixed autoclose when bank window closes
+
+
 5.0
 - Implemented profiles
   - use "/rs profiles" for more information on how to add/delete/copy/rename profiles
