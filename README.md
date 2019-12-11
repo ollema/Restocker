@@ -3,8 +3,12 @@
 #### Restocks items on the list automatically (if checked)
 ### Will only add items by name that are cached by the client (the item you add must be/have been in your bags/bank during this play session).
 *Above statement is only true for adding items, not for items already added.*
-#### Supports adding ANY item by itemID
+**Supports adding ANY item by itemID**
 
+### Profiles
+Full support for profiles.
+Useful for pve/pvp differences where items you wish to put into bank will need to be set to 0.
+Example: PVE profile has all potions/elixirs and their respective number to restock. PVP profile still need to have the potions but with the amount set to 0. When you visit the bank with the PVP profile the addon will put all potions/elixirs into bank and restock on your PVP profile items.
 
  
 

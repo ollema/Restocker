@@ -108,7 +108,7 @@ function core:getPoisonReagents()
       local minDifference = restockNum/2
 
       if poisonsNeeded >= minDifference and poisonsNeeded > 0 then
-          for reagent, amount in pairs(core.poisons[restockItem]) do
+          for reagent, amount in pairs(core.poisons[item.itemName]) do
             if neededReagents[reagent] ~= nil then neededReagents[reagent] = neededReagents[reagent]+(amount*poisonsNeeded) end
             if neededReagents[reagent] == nil then neededReagents[reagent] = (amount*poisonsNeeded) end
           end
