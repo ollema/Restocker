@@ -1,4 +1,4 @@
-## Interface: 11302
+## Interface: 11303
 ## Title: |cffff2200Restocker|r
 ## Author: RainForDays
 ## Notes: Restock items automatically
