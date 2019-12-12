@@ -163,20 +163,20 @@ end
 function events:BAG_UPDATE(event, ...)
   if core.currentlyRestocking == true then
     if GetCursorInfo() == "item" then return end
-    if type(core.coroutine) == nil then
+
+    if core.coroutine == nil then
+      core.coroutine = coroutine.create(function()
+        core:PickupItem()
+      end)
+      coroutine.resume(core.coroutine)
+    else
       if coroutine.status(core.coroutine) ~= "running" then
         core.coroutine = coroutine.create(function()
           core:PickupItem()
         end)
         coroutine.resume(core.coroutine)
       end
-    else
-      core.coroutine = coroutine.create(function()
-        core:PickupItem()
-      end)
-      coroutine.resume(core.coroutine)
     end
-
   end
 end
 

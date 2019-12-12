@@ -3,7 +3,6 @@ local _, core = ...
 core.currentlyRestocking = false
 core.itemsRestocked = {}
 core.restockedItems = false
-core.coroutine = nil
 core.framepool = {}
 core.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
 
