@@ -1,3 +1,7 @@
+5.1.4
+- Fixed deletion bug
+
+
 5.1.3
 - Fixed annoying "Couldn't split item" error when restocking from bank.
 
