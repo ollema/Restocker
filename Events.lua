@@ -10,6 +10,7 @@ events:RegisterEvent("BANKFRAME_CLOSED");
 events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
 events:RegisterEvent("BAG_UPDATE");
 events:RegisterEvent("PLAYER_LOGOUT");
+events:RegisterEvent("PALYER_ENTERING_WORLD");
 events:SetScript("OnEvent", function(self, event, ...)
   return self[event] and self[event](self, ...)
 end)
@@ -50,10 +51,15 @@ function events:ADDON_LOADED(name)
   SlashCmdList.RESTOCKER = function(msg)
     core:SlashCommand(msg)
   end
-  core:Print("|cffff2200Restocker|r by |cffFFF569Mayushi|r on |cffff0000Gehennas|r. /rs or /restocker to open addon frame.")
+  
   core:CreateOptionsMenu()
 end
 
+function events:PLAYER_ENTERING_WORLD(login, reloadui)
+  if login or reloadui then
+    core:Print("|cffff2200Restocker|r by |cffFFF569Mayushi|r. /rs or /restocker to open addon frame.")
+  end
+end
 
 function events:MERCHANT_SHOW()
   if Restocker.vendorAutoOpen then
