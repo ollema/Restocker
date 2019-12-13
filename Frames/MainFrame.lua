@@ -199,6 +199,8 @@ end
 function core:addItem(text)
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
+  if string.find(text, "%d") then text = tonumber(text) end
+
   local itemName, itemLink = GetItemInfo(text)
   local itemID
   if itemLink == nil then

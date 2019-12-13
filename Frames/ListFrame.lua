@@ -3,6 +3,7 @@ local _, core = ...;
 function core:addListFrame()
 
   local frame = CreateFrame("Frame", nil, core.hiddenFrame)
+  frame.index = #core.framepool+1
   frame:SetSize(core.addon.scrollChild:GetWidth(), 20);
   if #core.framepool == 0 then
     frame:SetPoint("TOP", core.addon.scrollChild, "TOP")
@@ -10,7 +11,6 @@ function core:addListFrame()
     frame:SetPoint("TOP", core.framepool[#core.framepool], "BOTTOM")
   end
   core.addon.scrollChild:SetHeight(#core.framepool*20)
-
   -- ITEM TEXT
   local text = frame:CreateFontString(nil, "OVERLAY");
   text:SetFontObject("GameFontHighlight");
@@ -27,7 +27,8 @@ function core:addListFrame()
 
     for i, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
-        Restocker.profiles[Restocker.currentProfile][i] = nil
+        tremove(Restocker.profiles[Restocker.currentProfile], parent.index)
+        break
       end
     end
     core:Update();
