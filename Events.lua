@@ -10,7 +10,7 @@ events:RegisterEvent("BANKFRAME_CLOSED");
 events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
 events:RegisterEvent("BAG_UPDATE");
 events:RegisterEvent("PLAYER_LOGOUT");
-events:RegisterEvent("PALYER_ENTERING_WORLD");
+events:RegisterEvent("PLAYER_ENTERING_WORLD");
 events:SetScript("OnEvent", function(self, event, ...)
   return self[event] and self[event](self, ...)
 end)
