@@ -59,7 +59,7 @@ end
 function events:PLAYER_ENTERING_WORLD(login, reloadui)
   if not core.loaded then return end
   if login or reloadui then
-    core:Print("|cffff2200Restocker|r by |cffFFF569Mayushi|r. /rs or /restocker to open addon frame.")
+    core:Print("|cffff2200Restocker|r by |cffFFF569Mayushi|r. /rs or /restocker to open addon.")
   end
 end
 
