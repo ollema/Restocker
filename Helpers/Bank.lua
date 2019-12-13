@@ -5,8 +5,8 @@ function core:PickupItem()
   local bankBagsReversed = {10,9,8,7,6,5,-1}
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
   for _, item in ipairs(currentProfile) do
-    if core.neededItems[item.itemName] == nil then core.neededItems[item.itemName] = 0 end
-    if core.neededItems[item.itemName] > 0 then
+    --if core.neededItems[item.itemName] == nil then core.neededItems[item.itemName] = 0 end
+    --if core.neededItems[item.itemName] > 0 then
       local numItemsInBags = GetItemCount(item.itemID, false)
       local numItemsInBank = GetItemCount(item.itemID, true) - numItemsInBags
       local restockNum = item.amount
@@ -21,7 +21,7 @@ function core:PickupItem()
 
               if item.itemName == bitemName then -- if item in slot == restock item
                 if difference < bstackSize then -- if the restock number is less than the stack size
-                  core.mouseHasItem = true
+                  --core.mouseHasItem = true
                   SplitContainerItem(bbag, bslot, difference) -- split the item
                   for ibag = 0, NUM_BAG_SLOTS do -- traverse inventory bags
                     for islot = 1, GetContainerNumSlots(ibag) do -- traverse bag slots in search of same item to form complete stack
@@ -35,8 +35,8 @@ function core:PickupItem()
                           else
                             PutItemInBag(19+ibag)
                           end
-                          core.neededItems[item.itemName] = core.neededItems[item.itemName] - difference
-                          core.mouseHasItem = false
+                          --core.neededItems[item.itemName] = core.neededItems[item.itemName] - difference
+                          --core.mouseHasItem = false
                           return
                         end
 
@@ -55,8 +55,8 @@ function core:PickupItem()
                       else
                         PutItemInBag(19+ibag)
                       end
-                      core.neededItems[item.itemName] = core.neededItems[item.itemName] - difference
-                      core.mouseHasItem = false
+                      --core.neededItems[item.itemName] = core.neededItems[item.itemName] - difference
+                      --core.mouseHasItem = false
                       return
                     end
                   end
@@ -90,7 +90,7 @@ function core:PickupItem()
           end -- for numslots
         end -- for numbags
       end
-    end
+    --end
   end -- for each Restocker.Item
 
   core.currentlyRestocking = false
