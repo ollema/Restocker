@@ -51,7 +51,7 @@ function events:ADDON_LOADED(name)
   SlashCmdList.RESTOCKER = function(msg)
     core:SlashCommand(msg)
   end
-  
+
   core:CreateOptionsMenu()
   core.loaded = true
 end
@@ -171,6 +171,7 @@ end
 function events:BAG_UPDATE(event, ...)
   if core.currentlyRestocking == true then
     if GetCursorInfo() == "item" then return end
+    if core.mouseHasItem == true then return end
 
     if core.coroutine == nil then
       core.coroutine = coroutine.create(function()

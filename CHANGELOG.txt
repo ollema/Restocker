@@ -1,3 +1,7 @@
+5.1.5
+- More fixing the annoying "Couldn't split those items" error
+
+
 5.1.4
 - Fixed deletion bug
 

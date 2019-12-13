@@ -19,9 +19,9 @@ function core:PickupItem()
 
             if item.itemName == bitemName then -- if item in slot == restock item
               if difference < bstackSize then -- if the restock number is less than the stack size
-                SplitContainerItem(bbag, bslot, tonumber(difference)) -- split the item 
-
-                for ibag = 0, NUM_BAG_SLOTS do -- traverse inventory bags 
+                SplitContainerItem(bbag, bslot, tonumber(difference)) -- split the item
+                core.mouseHasItem = true
+                for ibag = 0, NUM_BAG_SLOTS do -- traverse inventory bags
                   for islot = 1, GetContainerNumSlots(ibag) do -- traverse bag slots in search of same item to form complete stack
                     local _, istackSize, _, _, _, _, iitemLink, _, _, iitemID = GetContainerItemInfo(ibag, islot)
                     if iitemLink ~= nil then -- inventory slot contains an item
@@ -29,31 +29,35 @@ function core:PickupItem()
                       local curstackplusdif = istackSize + difference -- calc mouse stacksize + invslot stacksize
                       if iitemName == item.itemName and (curstackplusdif <= imaxStack) then -- inv slot can hold mouse items
                         if ibag == 0 then
-                          return PutItemInBackpack()
+                          PutItemInBackpack()
                         else
-                          return PutItemInBag(19+ibag)
+                          PutItemInBag(19+ibag)
                         end
+                        core.mouseHasItem = false
                       end
 
                     end
                   end -- for invslots
                 end -- for invbags
 
-                -- If we get here then there was nowhere to put the picked up item to match a full 
+                -- If we get here then there was nowhere to put the picked up item to match a full
                 -- or partial stack size, so push it to the first bag that has an empty slot
                 for ibag = 0, NUM_BAG_SLOTS do -- traverse bags
                   if GetContainerNumFreeSlots(ibag) > 0 then -- bag has free slot
                     if ibag == 0 then
-                      return PutItemInBackpack()
+                      PutItemInBackpack()
                     else
-                      return PutItemInBag(19+ibag)
+                      PutItemInBag(19+ibag)
                     end
-
+                    core.mouseHasItem = false
+                    return
                   end
                 end
 
               else -- difference >= bstackSize
-                return UseContainerItem(bbag, bslot) -- if the restock num is higher than the stack size then just rightclick that stack
+                UseContainerItem(bbag, bslot) -- if the restock num is higher than the stack size then just return rightclick that stack
+                return
+
               end
 
             end -- itemname == bitemname
