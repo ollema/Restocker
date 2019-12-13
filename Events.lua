@@ -156,16 +156,6 @@ function events:BANKFRAME_OPENED(event, ...)
     core:Update()
   end
 
-  --[[
-
-    core.neededItems = {}
-    for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
-      if (item.amount - GetItemCount(item.itemID, false)) > 0 and (GetItemCount(item.itemID, true) - GetItemCount(item.itemID, false)) > 0 then
-        core.neededItems[item.itemName] = item.amount - GetItemCount(item.itemID, false)
-      end
-    end
-    core.restockedItems = {}
-  ]]
   core.currentlyRestocking = true
   core:PickupItem()
 end
@@ -181,7 +171,6 @@ end
 function events:BAG_UPDATE_DELAYED(event, ...)
   if core.currentlyRestocking == true then
     if CursorHasItem() then return end
-    --if core.mouseHasItem == true then return end
 
     if core.coroutine == nil then
       core.coroutine = coroutine.create(function()
