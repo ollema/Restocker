@@ -31,6 +31,7 @@ function core:PickupItem()
                       local iitemName, _, _, _, _, _, _, imaxStack = GetItemInfo(iitemID)
                       local curstackplusdif = istackSize + difference -- calc mouse stacksize + invslot stacksize
                       if iitemName == item.itemName and curstackplusdif <= imaxStack then -- inv slot can hold mouse items
+
                         if ibag == BACKPACK_CONTAINER then
                           PutItemInBackpack()
                         else
@@ -49,7 +50,6 @@ function core:PickupItem()
                 for ibag = 0, NUM_BAG_SLOTS do -- traverse bags
                   if GetContainerNumFreeSlots(ibag) > 0 then -- bag has free slot
 
-                    core:Print(difference)
                     if ibag == BACKPACK_CONTAINER then
                       PutItemInBackpack()
                     else

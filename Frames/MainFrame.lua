@@ -187,10 +187,7 @@ end
 
 
 function core.DropDownMenuSelectProfile(self, arg1, arg2, checked)
-  Restocker.currentProfile = arg1
-  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
-  print(core.defaults.prefix .. "current profile: ".. Restocker.currentProfile)
-  core:Update()
+  core:ChangeProfile(arg1)
 end
 
 

@@ -160,6 +160,10 @@ function events:BANKFRAME_OPENED(event, ...)
   core:PickupItem()
 end
 
+function core:triggerBankOpen()
+  events:BANKFRAME_OPENED()
+end
+
 
 function events:BANKFRAME_CLOSED(event, ...)
   core.currentlyRestocking = false
