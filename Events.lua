@@ -206,6 +206,9 @@ end
 function events:PLAYER_LOGOUT()
   if Restocker.framePos == nil then Restocker.framePos = {} end
 
+  local menu = core.addon or core:CreateMenu()
+  menu:Hide()
+  
   local point, relativeTo, relativePoint, xOfs, yOfs = core.addon:GetPoint(core.addon:GetNumPoints())
 
   Restocker.framePos.point = point
