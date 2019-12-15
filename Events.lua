@@ -76,7 +76,12 @@ function events:MERCHANT_SHOW()
   local buyTable = {}
 
 
+
   if Restocker.autoBuy == true then
+    
+    local now = time()
+    if core.lastBuy ~= nil and now - core.lastBuy < 3 then return end
+
     local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
     for _, item in ipairs(currentProfile) do
@@ -108,6 +113,7 @@ function events:MERCHANT_SHOW()
             else
               BuyMerchantItem(i, n)
             end
+            core.lastBuy = time()
           end
 
       end
@@ -128,6 +134,7 @@ function events:MERCHANT_SHOW()
             else
               BuyMerchantItem(i, n)
             end
+            core.lastBuy = time()
           end -- forloop
         end
       end -- if buyTable[itemName] ~= nil
@@ -208,7 +215,7 @@ function events:PLAYER_LOGOUT()
 
   local menu = core.addon or core:CreateMenu()
   menu:Hide()
-  
+
   local point, relativeTo, relativePoint, xOfs, yOfs = core.addon:GetPoint(core.addon:GetNumPoints())
 
   Restocker.framePos.point = point

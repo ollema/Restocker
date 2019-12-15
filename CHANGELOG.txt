@@ -1,3 +1,7 @@
+5.6.2
+- Added small delay (2 sec) before autobuying again to prevent accidental over-stocking.
+
+
 5.6.1
 - Fixed lua error
 
