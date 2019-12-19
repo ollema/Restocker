@@ -1,5 +1,36 @@
 local _, core = ...;
 
+
+
+
+local function putIntoEmptySlot()
+  local bankBags = {-1,5,6,7,8,9,10}
+  for _, bag in ipairs(bankBags) do
+    for slot = 1, GetContainerNumSlots(bag) do
+      local _, stackSize, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+      if itemLink == nil then -- slot is empty
+        PickupContainerItem(bag, slot)
+      end
+    end
+  end
+end
+
+
+local function findPreciseStack(restockItemLink, amount)
+  local bankBagsReversed = {10,9,8,7,6,5,-1}
+  for _, bag in ipairs(bankBagsReversed) do
+    for slot = 1, GetContainerNumSlots(bag) do
+      local _, stackSize, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+      if itemLink == restockItemLink and stackSize == amount and locked then -- slot is not empty
+        UseContainerItem(bag, slot)
+      end
+    end
+  end
+end
+
+
+
+
 function core:PickupItem()
   local bankBags = {-1,5,6,7,8,9,10}
   local bankBagsReversed = {10,9,8,7,6,5,-1}
@@ -12,53 +43,59 @@ function core:PickupItem()
     local restockNum = item.amount
     local difference = restockNum-numItemsInBags
 
+    findPreciseStack(item.itemLink, difference)
+
     if difference > 0 and numItemsInBank > 0 then
       for _, bbag in ipairs(bankBagsReversed) do -- traverse bank bags backwards (helps keeping bank more tidy)
         for bslot = GetContainerNumSlots(bbag), 1, -1 do -- traverse bank bag slots backwards
-          local _, bstackSize, _, _, _, _, bitemLink, _, _, bitemID = GetContainerItemInfo(bbag, bslot)
+          local _, bstackSize, blocked, _, _, _, bitemLink, _, _, bitemID = GetContainerItemInfo(bbag, bslot)
           if bitemLink ~= nil then -- slot contains an item
             local bitemName = GetItemInfo(bitemID) -- get item name
 
             if item.itemName == bitemName then -- if item in slot == restock item
               if difference < bstackSize then -- if the restock number is less than the stack size
-
                 SplitContainerItem(bbag, bslot, difference) -- split the item
+                putIntoEmptySlot()
+                return
 
-                for ibag = 0, NUM_BAG_SLOTS do -- traverse inventory bags
-                  for islot = 1, GetContainerNumSlots(ibag) do -- traverse bag slots in search of same item to form complete stack
-                    local _, istackSize, _, _, _, _, iitemLink, _, _, iitemID = GetContainerItemInfo(ibag, islot)
-                    if iitemLink ~= nil then -- inventory slot contains an item
-                      local iitemName, _, _, _, _, _, _, imaxStack = GetItemInfo(iitemID)
-                      local curstackplusdif = istackSize + difference -- calc mouse stacksize + invslot stacksize
-                      if iitemName == item.itemName and curstackplusdif <= imaxStack then -- inv slot can hold mouse items
+                --[[
 
-                        if ibag == BACKPACK_CONTAINER then
-                          PutItemInBackpack()
-                        else
-                          local invID = ContainerIDToInventoryID(ibag)
-                          PutItemInBag(invID)
+                  for ibag = 0, NUM_BAG_SLOTS do -- traverse inventory bags
+                    for islot = 1, GetContainerNumSlots(ibag) do -- traverse bag slots in search of same item to form complete stack
+                      local _, istackSize, ilocked, _, _, _, iitemLink, _, _, iitemID = GetContainerItemInfo(ibag, islot)
+                      if iitemLink ~= nil then -- inventory slot contains an item
+                        local iitemName, _, _, _, _, _, _, imaxStack = GetItemInfo(iitemID)
+                        local curstackplusdif = istackSize + difference -- calc mouse stacksize + invslot stacksize
+                        if iitemName == item.itemName and curstackplusdif <= imaxStack then -- inv slot can hold mouse items
+  
+                          if ibag == BACKPACK_CONTAINER then
+                            PutItemInBackpack()
+                          else
+                            local invID = ContainerIDToInventoryID(ibag)
+                            PutItemInBag(invID)
+                          end
+                          return
                         end
-                        return
+  
                       end
-
+                    end -- for invslots
+                  end -- for invbags
+  
+                  -- If we get here then there was nowhere to put the picked up item to match a full
+                  -- or partial stack size, so push it to the first bag that has an empty slot
+                  for ibag = 0, NUM_BAG_SLOTS do -- traverse bags
+                    if GetContainerNumFreeSlots(ibag) > 0 then -- bag has free slot
+  
+                      if ibag == BACKPACK_CONTAINER then
+                        PutItemInBackpack()
+                      else
+                        local invID = ContainerIDToInventoryID(ibag)
+                        PutItemInBag(invID)
+                      end
+                      return
                     end
-                  end -- for invslots
-                end -- for invbags
-
-                -- If we get here then there was nowhere to put the picked up item to match a full
-                -- or partial stack size, so push it to the first bag that has an empty slot
-                for ibag = 0, NUM_BAG_SLOTS do -- traverse bags
-                  if GetContainerNumFreeSlots(ibag) > 0 then -- bag has free slot
-
-                    if ibag == BACKPACK_CONTAINER then
-                      PutItemInBackpack()
-                    else
-                      local invID = ContainerIDToInventoryID(ibag)
-                      PutItemInBag(invID)
-                    end
-                    return
                   end
-                end
+                ]]
 
               else -- difference >= bstackSize
                 UseContainerItem(bbag, bslot) -- if the restock num is higher than the stack size then just return rightclick that stack

@@ -8,7 +8,7 @@ events:RegisterEvent("MERCHANT_CLOSED");
 events:RegisterEvent("BANKFRAME_OPENED");
 events:RegisterEvent("BANKFRAME_CLOSED");
 events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
-events:RegisterEvent("BAG_UPDATE_DELAYED");
+events:RegisterEvent("BAG_UPDATE");
 events:RegisterEvent("PLAYER_LOGOUT");
 events:RegisterEvent("PLAYER_ENTERING_WORLD");
 events:SetScript("OnEvent", function(self, event, ...)
@@ -80,7 +80,7 @@ function events:MERCHANT_SHOW()
   if Restocker.autoBuy == true then
     
     local now = time()
-    if core.lastBuy ~= nil and now - core.lastBuy < 3 then return end
+    if core.lastBuy ~= nil and now - core.lastBuy < 2 then return end
 
     local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
@@ -179,8 +179,9 @@ function events:BANKFRAME_CLOSED(event, ...)
 end
 
 
-function events:BAG_UPDATE_DELAYED(event, ...)
+function events:BAG_UPDATE(event, ...)
   if core.currentlyRestocking == true then
+    if core.waitForUnlock then return end
     if CursorHasItem() then return end
 
     if core.coroutine == nil then
@@ -198,6 +199,7 @@ function events:BAG_UPDATE_DELAYED(event, ...)
     end
   end
 end
+
 
 
 function events:GET_ITEM_INFO_RECEIVED(itemID, success)

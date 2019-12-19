@@ -1,3 +1,7 @@
+5.6.3
+- Finally fixed restocking from bank without getting an error about "Couldn't split those items".
+
+
 5.6.2
 - Added small delay (2 sec) before autobuying again to prevent accidental over-stocking.
 
