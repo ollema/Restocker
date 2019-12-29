@@ -10,7 +10,7 @@ function core:CreateMenu()
   ]]
 
   local addon = CreateFrame("Frame", "RestockerMainFrame", UIParent, "BasicFrameTemplate");
-  addon.width = 250
+  addon.width = 300
   addon.height = 400
   addon:SetSize(addon.width, addon.height);
   addon:SetPoint(Restocker.framePos.point or "RIGHT", UIParent, Restocker.framePos.relativePoint or "RIGHT", Restocker.framePos.xOfs or -5, Restocker.framePos.yOfs or 0);
