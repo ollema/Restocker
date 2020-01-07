@@ -54,6 +54,7 @@ function core:addListFrame()
       end
     end
     editBox:ClearFocus()
+    self:SetText(tonumber(amount));
 
   end);
   editBox:SetScript("OnKeyUp", function(self)
@@ -65,7 +66,7 @@ function core:addListFrame()
       amount = 0;
     end
 
-    self:SetText(amount);
+    self:SetText(tonumber(amount));
 
     for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then

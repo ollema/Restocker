@@ -105,7 +105,16 @@ function core:getPoisonReagents()
       local restockNum = item.amount
       local inPossesion = GetItemCount(item.itemID, true)
       local poisonsNeeded = restockNum - inPossesion
-      local minDifference = restockNum/2
+      local minDifference
+
+      local inBank = GetItemCount(item.itemID, true) - GetItemCount(item.itemID, false)
+      if inBank == 0 then
+        minDifference = 0
+      else
+        minDifference = restockNum/2
+      end
+
+
 
       if poisonsNeeded >= minDifference and poisonsNeeded > 0 then
           for reagent, amount in pairs(core.poisons[item.itemName]) do

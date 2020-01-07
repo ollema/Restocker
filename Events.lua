@@ -33,8 +33,8 @@ function events:ADDON_LOADED(name)
   if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
   Restocker.Items = nil
   if Restocker.framePos == nil then Restocker.framePos = {} end
-  if Restocker.vendorAutoOpen == nil then Restocker.vendorAutoOpen = false end
-  if Restocker.bankAutoOpen == nil then Restocker.bankAutoOpen = true end
+  if Restocker.autoOpenAtMerchant == nil then Restocker.autoOpenAtMerchant = false end
+  if Restocker.autoOpenAtBank == nil then Restocker.autoOpenAtBank = true end
   if Restocker.profileSelectedForDeletion == nil then Restocker.profileSelectedForDeletion = "" end
 
 
@@ -64,7 +64,10 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
-  if Restocker.vendorAutoOpen then
+  local now = time()
+  if core.lastTimeOpenedMerchantWindow and now - core.lastTimeOpenedMerchantWindow < 2 then return end
+  core.lastTimeOpenedMerchantWindow = time()
+  if Restocker.autoOpenAtMerchant then
     local menu = core.addon or core:CreateMenu();
     menu:Show()
     core:Update()
@@ -78,9 +81,8 @@ function events:MERCHANT_SHOW()
 
 
   if Restocker.autoBuy == true then
-    
-    local now = time()
-    if core.lastBuy ~= nil and now - core.lastBuy < 2 then return end
+
+
 
     local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
@@ -113,7 +115,6 @@ function events:MERCHANT_SHOW()
             else
               BuyMerchantItem(i, n)
             end
-            core.lastBuy = time()
           end
 
       end
@@ -134,11 +135,11 @@ function events:MERCHANT_SHOW()
             else
               BuyMerchantItem(i, n)
             end
-            core.lastBuy = time()
           end -- forloop
         end
       end -- if buyTable[itemName] ~= nil
     end -- for loop GetMerchantNumItems()
+    
   end
 end
 
@@ -157,7 +158,7 @@ end
 function events:BANKFRAME_OPENED(event, ...)
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
-  if Restocker.bankAutoOpen then
+  if Restocker.autoOpenAtBank then
     local menu = core.addon or core:CreateMenu();
     menu:Show()
     core:Update()

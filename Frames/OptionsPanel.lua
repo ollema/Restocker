@@ -15,43 +15,43 @@ function core:CreateOptionsMenu()
 
 
 
-  local vendorAutoOpen = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
-  vendorAutoOpen:SetSize(25,25)
-  vendorAutoOpen:SetPoint("TOPLEFT", text, "BOTTOMLEFT", 10, -25)
-  vendorAutoOpen:SetScript("OnClick", function(self, button)
-    Restocker.vendorAutoOpen = self:GetChecked()
+  local autoOpenAtMerchant = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
+  autoOpenAtMerchant:SetSize(25,25)
+  autoOpenAtMerchant:SetPoint("TOPLEFT", text, "BOTTOMLEFT", 10, -25)
+  autoOpenAtMerchant:SetScript("OnClick", function(self, button)
+    Restocker.autoOpenAtMerchant = self:GetChecked()
   end)
-  vendorAutoOpen:SetChecked(Restocker.vendorAutoOpen)
-  optionsPanel.vendorAutoOpen = vendorAutoOpen
+  autoOpenAtMerchant:SetChecked(Restocker.autoOpenAtMerchant)
+  optionsPanel.autoOpenAtMerchant = autoOpenAtMerchant
 
-  local vendorAutoOpenText = vendorAutoOpen:CreateFontString(nil, "OVERLAY")
-  vendorAutoOpenText:SetFontObject("GameFontNormal")
-  vendorAutoOpenText:SetPoint("LEFT", vendorAutoOpen, "RIGHT", 3, 0)
-  vendorAutoOpenText:SetText("Open Restocker when visiting a vendor")
-  optionsPanel.vendorAutoOpenText = vendorAutoOpenText
+  local autoOpenAtMerchantText = autoOpenAtMerchant:CreateFontString(nil, "OVERLAY")
+  autoOpenAtMerchantText:SetFontObject("GameFontNormal")
+  autoOpenAtMerchantText:SetPoint("LEFT", autoOpenAtMerchant, "RIGHT", 3, 0)
+  autoOpenAtMerchantText:SetText("Open Restocker when visiting a vendor")
+  optionsPanel.autoOpenAtMerchantText = autoOpenAtMerchantText
 
 
 
-  local bankAutoOpen = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
-  bankAutoOpen:SetSize(25,25)
-  bankAutoOpen:SetPoint("TOPLEFT", vendorAutoOpen, "BOTTOMLEFT", 0, 0)
-  bankAutoOpen:SetScript("OnClick", function(self, button)
-    Restocker.bankAutoOpen = self:GetChecked()
+  local autoOpenAtBank = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
+  autoOpenAtBank:SetSize(25,25)
+  autoOpenAtBank:SetPoint("TOPLEFT", autoOpenAtMerchant, "BOTTOMLEFT", 0, 0)
+  autoOpenAtBank:SetScript("OnClick", function(self, button)
+    Restocker.autoOpenAtBank = self:GetChecked()
   end)
-  bankAutoOpen:SetChecked(Restocker.bankAutoOpen)
-  optionsPanel.bankAutoOpen = bankAutoOpen
+  autoOpenAtBank:SetChecked(Restocker.autoOpenAtBank)
+  optionsPanel.autoOpenAtBank = autoOpenAtBank
 
-  local bankAutoOpenText = bankAutoOpen:CreateFontString(nil, "OVERLAY")
-  bankAutoOpenText:SetFontObject("GameFontNormal")
-  bankAutoOpenText:SetPoint("LEFT", bankAutoOpen, "RIGHT", 3, 0)
-  bankAutoOpenText:SetText("Open Restocker when visiting the bank")
-  optionsPanel.bankAutoOpenText = bankAutoOpenText
+  local autoOpenAtBankText = autoOpenAtBank:CreateFontString(nil, "OVERLAY")
+  autoOpenAtBankText:SetFontObject("GameFontNormal")
+  autoOpenAtBankText:SetPoint("LEFT", autoOpenAtBank, "RIGHT", 3, 0)
+  autoOpenAtBankText:SetText("Open Restocker when visiting the bank")
+  optionsPanel.autoOpenAtBankText = autoOpenAtBankText
 
 
 
   -- Profiles
   local profilesHeader = optionsPanel:CreateFontString(nil, "OVERLAY")
-  profilesHeader:SetPoint("TOPLEFT", bankAutoOpen, "BOTTOMLEFT", -10, -20)
+  profilesHeader:SetPoint("TOPLEFT", autoOpenAtBank, "BOTTOMLEFT", -10, -20)
   profilesHeader:SetFontObject("GameFontNormalLarge")
   profilesHeader:SetText("Profiles")
 
