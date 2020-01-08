@@ -99,7 +99,7 @@ core.poisons = poisons;
 
 
 function core:getPoisonReagents()
-  local neededReagents = {}
+  local T = {}
   for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
     if string.find(item.itemName:lower(), "poison") ~= nil then
       local poisonName = item.itemName
@@ -119,14 +119,14 @@ function core:getPoisonReagents()
 
 
       if poisonsMissing >= minDifference and poisonsMissing > 0 then
-          for reagent, reagentAmount in pairs(core.poisons[poisonName]) do
-            if neededReagents[reagent] ~= nil then neededReagents[reagent] = neededReagents[reagent] + (reagentAmount * poisonsMissing) end
-            if neededReagents[reagent] == nil then neededReagents[reagent] = (reagentAmount * poisonsMissing) end
+          for reagent, amount in pairs(core.poisons[poisonName]) do
+            local amountToGet = amount * poisonsMissing
+            if T[reagent] ~= nil then T[reagent] = T[reagent] + amountToGet end
+            if T[reagent] == nil then T[reagent] = amountToGet end
           end
       end
-
     end
   end
 
-  return neededReagents
+  return T
 end
