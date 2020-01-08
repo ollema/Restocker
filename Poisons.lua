@@ -102,24 +102,26 @@ function core:getPoisonReagents()
   local neededReagents = {}
   for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
     if string.find(item.itemName:lower(), "poison") ~= nil then
-      local restockNum = item.amount
+      local poisonName = item.itemName
+      local poisonRestockAmount = item.amount
       local inPossesion = GetItemCount(item.itemID, true)
-      local poisonsNeeded = restockNum - inPossesion
+      local inBags = GetItemCount(item.itemID, false)
+      local poisonsMissing = poisonRestockAmount - inPossesion
       local minDifference
 
-      local inBank = GetItemCount(item.itemID, true) - GetItemCount(item.itemID, false)
+      local inBank = inPossesion - inBags
       if inBank == 0 then
         minDifference = 0
       else
-        minDifference = restockNum/2
+        minDifference = poisonRestockAmount/2
       end
 
 
 
-      if poisonsNeeded >= minDifference and poisonsNeeded > 0 then
-          for reagent, amount in pairs(core.poisons[item.itemName]) do
-            if neededReagents[reagent] ~= nil then neededReagents[reagent] = neededReagents[reagent]+(amount*poisonsNeeded) end
-            if neededReagents[reagent] == nil then neededReagents[reagent] = (amount*poisonsNeeded) end
+      if poisonsMissing >= minDifference and poisonsMissing > 0 then
+          for reagent, reagentAmount in pairs(core.poisons[poisonName]) do
+            if neededReagents[reagent] ~= nil then neededReagents[reagent] = neededReagents[reagent] + (reagentAmount * poisonsMissing) end
+            if neededReagents[reagent] == nil then neededReagents[reagent] = (reagentAmount * poisonsMissing) end
           end
       end
 
@@ -128,6 +130,3 @@ function core:getPoisonReagents()
 
   return neededReagents
 end
-
-
---return core
