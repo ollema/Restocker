@@ -64,9 +64,9 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
-  local now = time()
+  local now = GetTime()
   if core.lastTimeOpenedMerchantWindow and now - core.lastTimeOpenedMerchantWindow < 2 then return end
-  core.lastTimeOpenedMerchantWindow = time()
+  core.lastTimeOpenedMerchantWindow = GetTime()
   if Restocker.autoOpenAtMerchant then
     local menu = core.addon or core:CreateMenu();
     menu:Show()
