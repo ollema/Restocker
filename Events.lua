@@ -1,6 +1,7 @@
 local _, core = ...;
 core.loaded = false
 core.itemWaitTable = {}
+
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:RegisterEvent("MERCHANT_SHOW");
@@ -64,9 +65,6 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
-  local now = GetTime()
-  if core.lastTimeOpenedMerchantWindow and now - core.lastTimeOpenedMerchantWindow < 2 then return end
-  core.lastTimeOpenedMerchantWindow = GetTime()
   if Restocker.autoOpenAtMerchant then
     local menu = core.addon or core:CreateMenu();
     menu:Show()
@@ -81,9 +79,6 @@ function events:MERCHANT_SHOW()
 
 
   if Restocker.autoBuy == true then
-
-
-
     local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
     for _, item in ipairs(currentProfile) do
@@ -139,7 +134,6 @@ function events:MERCHANT_SHOW()
         end
       end -- if buyTable[itemName] ~= nil
     end -- for loop GetMerchantNumItems()
-    
   end
 end
 
