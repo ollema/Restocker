@@ -54,6 +54,8 @@ function events:ADDON_LOADED(name)
   end
 
   core:CreateOptionsMenu()
+  core:Show()
+  core:Hide()
   core.loaded = true
 end
 
@@ -66,9 +68,7 @@ end
 
 function events:MERCHANT_SHOW()
   if Restocker.autoOpenAtMerchant then
-    local menu = core.addon or core:CreateMenu();
-    menu:Show()
-    core:Update()
+    core:Show()
   end
 
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
@@ -139,8 +139,7 @@ end
 
 
 function events:MERCHANT_CLOSED(event, ...)
-  local menu = core.addon or core:CreateMenu();
-  menu:Hide();
+  core:Hide()
 end
 
 
@@ -153,9 +152,7 @@ function events:BANKFRAME_OPENED(event, ...)
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   if Restocker.autoOpenAtBank then
-    local menu = core.addon or core:CreateMenu();
-    menu:Show()
-    core:Update()
+    core:Show()
   end
 
   core.currentlyRestocking = true
@@ -169,8 +166,7 @@ end
 
 function events:BANKFRAME_CLOSED(event, ...)
   core.currentlyRestocking = false
-  local menu = core.addon or core:CreateMenu();
-  menu:Hide()
+  core:Hide()
 end
 
 
@@ -210,8 +206,8 @@ end
 function events:PLAYER_LOGOUT()
   if Restocker.framePos == nil then Restocker.framePos = {} end
 
-  local menu = core.addon or core:CreateMenu()
-  menu:Hide()
+  core:Show()
+  core:Hde()
 
   local point, relativeTo, relativePoint, xOfs, yOfs = core.addon:GetPoint(core.addon:GetNumPoints())
 
