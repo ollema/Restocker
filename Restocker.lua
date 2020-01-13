@@ -18,6 +18,24 @@ function core:Print(...)
 end
 
 
+function core:Show()
+  local menu = core.addon or core:CreateMenu();
+  menu:Show()
+  core:Update()
+end
+
+
+function core:Hide()
+  core.addon:Hide()
+end
+
+function core:Toggle()
+  core:Show()
+  core:Hide()
+  core.addon:SetShown(not core.addon:IsShown())
+end
+
+
 
 core.commands = {
   show = core.defaults.slash .. "show - Show the addon",
@@ -37,8 +55,7 @@ function core:SlashCommand(args)
   command = command:lower()
 
   if command == "show" then
-    local menu = core.addon or core:CreateMenu()
-    menu:Show()
+    core:Show()
 
   elseif command == "profile" then
     if rest == "" or rest == nil then
@@ -83,8 +100,7 @@ function core:SlashCommand(args)
     return
 
   else
-    local menu = core.addon or core:CreateMenu()
-    menu:SetShown(not menu:IsShown())
+    core:Toggle()
   end
   core:Update()
 end
