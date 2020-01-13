@@ -121,8 +121,7 @@ function core:getPoisonReagents()
       if poisonsMissing >= minDifference and poisonsMissing > 0 then
           for reagent, amount in pairs(core.poisons[poisonName]) do
             local amountToGet = amount * poisonsMissing
-            if T[reagent] ~= nil then T[reagent] = T[reagent] + amountToGet end
-            if T[reagent] == nil then T[reagent] = amountToGet end
+            T[reagent] = T[reagent] and T[reagent] + amountToGet or amountToGet
           end
       end
     end
