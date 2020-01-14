@@ -79,8 +79,8 @@ function core:PickupItem()
           if iitemLink ~= nil then -- slot contains an item
             local iitemName = GetItemInfo(iitemID)
             if iitemName == item.itemName then -- item in slot is same as restock item
-              return UseContainerItem(ibag, islot) -- push item from inventory to bank
               core.didBankStuff = true
+              return UseContainerItem(ibag, islot) -- push item from inventory to bank
               -- do this even if this results in less than the restock amount in bags as it will trigger the
               -- above code and will grab a partial stack to complete the numbers in inventory
               -- basically lazy coding which makes the implementation of profiles later easier
@@ -93,6 +93,8 @@ function core:PickupItem()
   end -- for each Restocker.Item
 
   core.currentlyRestocking = false
-  if core.didBankStuff then core:Print(core.defaults.prefix .. "finished restocking from bank.") end
+  if core.didBankStuff then 
+    core:Print(core.defaults.prefix .. "finished restocking from bank.") 
+  end
   core.didBankStuff = false
 end
