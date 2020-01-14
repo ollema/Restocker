@@ -67,6 +67,7 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
+  local didBuy = false
   if Restocker.autoOpenAtMerchant then
     core:Show()
   end
@@ -107,8 +108,10 @@ function events:MERCHANT_SHOW()
           for n = buyAmount, 1, -itemStackCount do
             if n > itemStackCount then
               BuyMerchantItem(i, itemStackCount)
+              local didBuy = true
             else
               BuyMerchantItem(i, n)
+              local didBuy = true
             end
           end
 
@@ -123,18 +126,21 @@ function events:MERCHANT_SHOW()
 
         if item.numNeeded > numAvailable and numAvailable > 0 then
           BuyMerchantItem(i, numAvailable)
+          local didBuy = true
         else
           for n = item.numNeeded, 1, -itemStackCount do
             if n > itemStackCount then
               BuyMerchantItem(i, itemStackCount)
+              local didBuy = true
             else
               BuyMerchantItem(i, n)
+              local didBuy = true
             end
           end -- forloop
         end
       end -- if buyTable[itemName] ~= nil
     end -- for loop GetMerchantNumItems()
-    core:Print(core.defaults.prefix .. "finished restocking from vendor.")
+    if didBuy then core:Print(core.defaults.prefix .. "finished restocking from vendor.") end
   end
 end
 

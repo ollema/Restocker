@@ -1,5 +1,5 @@
 local _, core = ...;
-
+core.didBankStuff = false
 
 
 
@@ -56,10 +56,12 @@ function core:PickupItem()
               if difference < bstackSize then -- if the restock number is less than the stack size
                 SplitContainerItem(bbag, bslot, difference) -- split the item
                 putIntoEmptySlot()
+                core.didBankStuff = true
                 return
 
               else -- difference >= bstackSize
                 UseContainerItem(bbag, bslot) -- if the restock num is higher than the stack size then just return rightclick that stack
+                core.didBankStuff = true
                 return
               end
 
@@ -78,6 +80,7 @@ function core:PickupItem()
             local iitemName = GetItemInfo(iitemID)
             if iitemName == item.itemName then -- item in slot is same as restock item
               return UseContainerItem(ibag, islot) -- push item from inventory to bank
+              core.didBankStuff = true
               -- do this even if this results in less than the restock amount in bags as it will trigger the
               -- above code and will grab a partial stack to complete the numbers in inventory
               -- basically lazy coding which makes the implementation of profiles later easier
@@ -90,5 +93,6 @@ function core:PickupItem()
   end -- for each Restocker.Item
 
   core.currentlyRestocking = false
-  core:Print(core.defaults.prefix .. "finished restocking from bank.")
+  if core.didBankStuff then core:Print(core.defaults.prefix .. "finished restocking from bank.") end
+  core.didBankStuff = false
 end
