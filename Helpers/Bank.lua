@@ -90,4 +90,5 @@ function core:PickupItem()
   end -- for each Restocker.Item
 
   core.currentlyRestocking = false
+  core:Print(core.defaults.prefix .. "finished restocking from bank.")
 end

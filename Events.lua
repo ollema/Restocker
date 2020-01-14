@@ -134,6 +134,7 @@ function events:MERCHANT_SHOW()
         end
       end -- if buyTable[itemName] ~= nil
     end -- for loop GetMerchantNumItems()
+    core:Print(core.defaults.prefix .. "finished restocking from vendor.")
   end
 end
 

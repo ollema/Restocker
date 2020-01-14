@@ -1,3 +1,15 @@
+5.6.4
+- Updated the logic regarding poisons and minimum supply.
+  - Now checks if you have poisons in the bank, if you don't it will buy the needed amount of reagents every time to get to the cap.
+  - If you do have poisons in the bank then it will only buy poison reagents if you are below 50% of your set amount (up to the cap).
+  - By far the easiest thing to do in regards to this is to just craft a lot of poisons and store them in your bank and making a habit of visiting the bank to restock on already crafted poisons.
+  - The change was made to make it easier for rogues still leveling to use this to restock on poison supplies when they visit a vendor but perhaps only missing ~30% of them.
+
+- Removed the delay between opening 2 merchant windows. This was put in place to prevent the addon from buying basically double the amount of reagents because you closed the window to fast and reopened it. Inadvertantly it made automatic restocking from multiple vendors take longer so it's now been removed.
+
+- Added a "Restocker finished restocking from vendor." message to indicate that you can now close the merchant window.
+- Added a "Restocker finished restocking from bank." message.
+
 5.6.3
 - Finally fixed restocking from bank without getting an error about "Couldn't split those items".
 
