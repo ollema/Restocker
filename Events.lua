@@ -108,10 +108,10 @@ function events:MERCHANT_SHOW()
           for n = buyAmount, 1, -itemStackCount do
             if n > itemStackCount then
               BuyMerchantItem(i, itemStackCount)
-              local didBuy = true
+              didBuy = true
             else
               BuyMerchantItem(i, n)
-              local didBuy = true
+              didBuy = true
             end
           end
 
@@ -126,15 +126,15 @@ function events:MERCHANT_SHOW()
 
         if item.numNeeded > numAvailable and numAvailable > 0 then
           BuyMerchantItem(i, numAvailable)
-          local didBuy = true
+          didBuy = true
         else
           for n = item.numNeeded, 1, -itemStackCount do
             if n > itemStackCount then
               BuyMerchantItem(i, itemStackCount)
-              local didBuy = true
+              didBuy = true
             else
               BuyMerchantItem(i, n)
-              local didBuy = true
+              didBuy = true
             end
           end -- forloop
         end
