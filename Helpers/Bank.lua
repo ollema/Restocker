@@ -20,9 +20,9 @@ local timer = 0
 
 onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
   timer = timer+elapsed
-  if timer >= ONUPDATE_INTERVAL then
-    timer = 0
-    if core.currentlyRestocking then
+  if core.currentlyRestocking then
+    if timer >= ONUPDATE_INTERVAL then
+      timer = 0
 
       core:pickupItem()
     end
