@@ -1,3 +1,6 @@
+5.7
+- Updated event driven restocking from bank to a OnUpdate script.
+
 5.6.4
 - Updated the logic regarding poisons and minimum supply.
   - Now checks if you have poisons in the bank, if you don't it will buy the needed amount of reagents every time to get to the cap.
