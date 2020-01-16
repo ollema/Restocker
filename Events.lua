@@ -2,6 +2,7 @@ local _, core = ...;
 core.loaded = false
 core.itemWaitTable = {}
 
+
 local events = CreateFrame("Frame");
 events:RegisterEvent("ADDON_LOADED");
 events:RegisterEvent("MERCHANT_SHOW");
@@ -9,7 +10,6 @@ events:RegisterEvent("MERCHANT_CLOSED");
 events:RegisterEvent("BANKFRAME_OPENED");
 events:RegisterEvent("BANKFRAME_CLOSED");
 events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
-events:RegisterEvent("BAG_UPDATE");
 events:RegisterEvent("PLAYER_LOGOUT");
 events:RegisterEvent("PLAYER_ENTERING_WORLD");
 events:SetScript("OnEvent", function(self, event, ...)
@@ -158,12 +158,9 @@ end
 function events:BANKFRAME_OPENED(event, ...)
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
-  if Restocker.autoOpenAtBank then
-    core:Show()
-  end
+  if Restocker.autoOpenAtBank then core:Show() end
 
   core.currentlyRestocking = true
-  core:PickupItem()
 end
 
 function core:triggerBankOpen()
@@ -176,27 +173,6 @@ function events:BANKFRAME_CLOSED(event, ...)
   core:Hide()
 end
 
-
-function events:BAG_UPDATE(event, ...)
-  if core.currentlyRestocking == true then
-    if core.waitForUnlock then return end
-    if CursorHasItem() then return end
-
-    if core.coroutine == nil then
-      core.coroutine = coroutine.create(function()
-        core:PickupItem()
-      end)
-      coroutine.resume(core.coroutine)
-    else
-      if coroutine.status(core.coroutine) ~= "running" then
-        core.coroutine = coroutine.create(function()
-          core:PickupItem()
-        end)
-        coroutine.resume(core.coroutine)
-      end
-    end
-  end
-end
 
 
 
