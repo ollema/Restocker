@@ -2,6 +2,8 @@ local _, core = ...;
 
 core.didBankStuff = false
 local containerFreeSlots = {}
+core.justSplit = false
+core.splitLoc = {}
 
 
 
@@ -39,10 +41,19 @@ local function putIntoEmptyBankSlot()
 
     if count(containerFreeSlots) > 0 then
       PickupContainerItem(bag, containerFreeSlots[1])
+      core.splitLoc.bag = bag
+      core.splitLoc.slot = containerFreeSlots[1]
+      core.justSplit = true
       return
     end
 
   end
+end
+
+local function pickupSpecificSlot(bag, slot)
+  UseContainerItem(bag, slot)
+  wipe(core.splitLoc)
+  core.justSplit = false
 end
 
 
@@ -51,6 +62,9 @@ function core:pickupItem()
   local bankBagsReversed = {10,9,8,7,6,5,-1}
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
+  if core.justSplit then
+    return pickupSpecificSlot(core.splitLoc.bag, core.splitLoc.slot)
+  end
 
   for _, item in ipairs(currentProfile) do
     local numItemsInBags = GetItemCount(item.itemID, false)
@@ -106,11 +120,8 @@ function core:pickupItem()
   end -- for each Restocker.Item
 
   core.currentlyRestocking = false
-  if core.didBankStuff then 
-    core:Print(core.defaults.prefix .. "finished restocking from bank.") 
+  if core.didBankStuff then
+    core:Print(core.defaults.prefix .. "finished restocking from bank.")
   end
   core.didBankStuff = false
 end
-
-
-
