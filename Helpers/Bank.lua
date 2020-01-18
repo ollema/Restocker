@@ -57,7 +57,31 @@ local function pickupSpecificSlot(bag, slot)
 end
 
 
+local function anythingLocked()
+  local bankBags = {-1,5,6,7,8,9,10}
+  local anythingLocked = false
+
+  for _, B in pairs(bankBags) do
+    for S = 1, GetContainerNumSlots(B) do
+      local _, _, locked = GetContainerItemInfo(B, S)
+      if locked then return true end
+    end
+  end
+
+  for B = 0, NUM_BAG_SLOTS do
+    for S = 1, GetContainerNumSlots(B) do
+      local _, _, locked = GetContainerItemInfo(B, S)
+      if locked then return true end
+    end
+  end
+
+  return false
+end
+
+
+
 function core:pickupItem()
+  if anythingLocked() then return end
   local bankBags = {-1,5,6,7,8,9,10}
   local bankBagsReversed = {10,9,8,7,6,5,-1}
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
