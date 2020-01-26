@@ -27,7 +27,7 @@ function core:CreateOptionsMenu()
   local autoOpenAtMerchantText = autoOpenAtMerchant:CreateFontString(nil, "OVERLAY")
   autoOpenAtMerchantText:SetFontObject("GameFontNormal")
   autoOpenAtMerchantText:SetPoint("LEFT", autoOpenAtMerchant, "RIGHT", 3, 0)
-  autoOpenAtMerchantText:SetText("Open Restocker when visiting a vendor")
+  autoOpenAtMerchantText:SetText("Open window at vendor")
   optionsPanel.autoOpenAtMerchantText = autoOpenAtMerchantText
 
 
@@ -44,7 +44,7 @@ function core:CreateOptionsMenu()
   local autoOpenAtBankText = autoOpenAtBank:CreateFontString(nil, "OVERLAY")
   autoOpenAtBankText:SetFontObject("GameFontNormal")
   autoOpenAtBankText:SetPoint("LEFT", autoOpenAtBank, "RIGHT", 3, 0)
-  autoOpenAtBankText:SetText("Open Restocker when visiting the bank")
+  autoOpenAtBankText:SetText("Open window at bank")
   optionsPanel.autoOpenAtBankText = autoOpenAtBankText
 
 

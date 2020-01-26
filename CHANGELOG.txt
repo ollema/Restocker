@@ -1,3 +1,7 @@
+5.8
+- Housekeeping and hopefully some improvements where the addon wasn't buying everything the first time you talked to a vendor.
+    - This could also be because of how the game handles getting item info and if the item isn't cached then you have to wait for the server to send the data.
+
 5.7
 - Updated event driven restocking from bank to a OnUpdate script.
 

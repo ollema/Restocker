@@ -1,6 +1,6 @@
 local _, core = ...;
 
-poisons = {
+core.poisons = {
   -- INSTANT POISONS
   ["Instant Poison VI"] = {
     ["Dust of Deterioration"] = 4,
@@ -95,13 +95,11 @@ poisons = {
   }
 }
 
-core.poisons = poisons;
-
 
 function core:getPoisonReagents()
   local T = {}
   for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
-    if string.find(item.itemName:lower(), "poison") ~= nil then
+    if string.find(item.itemName, "Poison") then
       local poisonName = item.itemName
       local poisonRestockAmount = item.amount
       local inPossesion = GetItemCount(item.itemID, true)
@@ -111,18 +109,17 @@ function core:getPoisonReagents()
 
       local inBank = inPossesion - inBags
       if inBank == 0 then
-        minDifference = 0
+        minDifference = 1
       else
         minDifference = poisonRestockAmount/2
       end
 
 
-
       if poisonsMissing >= minDifference and poisonsMissing > 0 then
-          for reagent, amount in pairs(core.poisons[poisonName]) do
-            local amountToGet = amount * poisonsMissing
-            T[reagent] = T[reagent] and T[reagent] + amountToGet or amountToGet
-          end
+        for reagent, amount in pairs(core.poisons[poisonName]) do
+          local amountToGet = amount * poisonsMissing
+          T[reagent] = T[reagent] and T[reagent] + amountToGet or amountToGet
+        end
       end
     end
   end
