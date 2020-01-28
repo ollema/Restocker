@@ -1,5 +1,6 @@
 local _, core = ...
 
+core.profileSelectedForDeletion = ""
 
 
 -- INTERFACE OPTIONS PANEL
@@ -112,7 +113,7 @@ function core:CreateOptionsMenu()
   deleteProfileButton:SetNormalFontObject("GameFontNormal");
   deleteProfileButton:SetHighlightFontObject("GameFontHighlight");
   deleteProfileButton:SetScript("OnClick", function(self, button, down)
-    core:DeleteProfile(Restocker.profileSelectedForDeletion)
+    core:DeleteProfile(core.profileSelectedForDeletion)
   end);
   optionsPanel.deleteProfileButton = deleteProfileButton
 
@@ -124,6 +125,6 @@ end
 
 
 function core.selectProfileForDeletion(self, arg1, arg2, checked)
-  Restocker.profileSelectedForDeletion = arg1
-  UIDropDownMenu_SetText(core.optionsPanel.deleteProfileMenu, Restocker.profileSelectedForDeletion)
+  core.profileSelectedForDeletion = arg1
+  UIDropDownMenu_SetText(core.optionsPanel.deleteProfileMenu, core.profileSelectedForDeletion)
 end

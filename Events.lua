@@ -30,15 +30,15 @@ function events:ADDON_LOADED(name)
 
 
   -- NEW RESTOCKER
-  if Restocker == nil then Restocker = {} end
-  if Restocker.autoBuy == nil then Restocker.autoBuy = true end
-  if Restocker.profiles == nil then Restocker.profiles = {} end
-  if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
-  if Restocker.profiles[Restocker.currentProfile] == nil then Restocker.profiles[Restocker.currentProfile] = {} end
-  if Restocker.framePos == nil then Restocker.framePos = {} end
-  if Restocker.autoOpenAtMerchant == nil then Restocker.autoOpenAtMerchant = false end
-  if Restocker.autoOpenAtBank == nil then Restocker.autoOpenAtBank = true end
-  if Restocker.profileSelectedForDeletion == nil then Restocker.profileSelectedForDeletion = "" end
+  if not Restocker then
+    Restocker = {}
+    Restocker.autoBuy = true
+    Restocker.profiles = {}
+    Restocker.currentProfile = "default"
+    Restocker.profiles.default = {}
+    Restocker.framePos = {}
+    Restocker.autoOpenAtBank = false
+    Restocker.autoOpenAtMerchant = false
 
 
   local f=InterfaceOptionsFrame;
