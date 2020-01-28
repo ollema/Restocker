@@ -34,6 +34,7 @@ function events:ADDON_LOADED(name)
   if Restocker.autoBuy == nil then Restocker.autoBuy = true end
   if Restocker.profiles == nil then Restocker.profiles = {} end
   if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
+  if Restocker.profiles[Restocker.currentProfile] == nil then Restocker.profiles[Restocker.currentProfile] = {} end
   if Restocker.framePos == nil then Restocker.framePos = {} end
   if Restocker.autoOpenAtMerchant == nil then Restocker.autoOpenAtMerchant = false end
   if Restocker.autoOpenAtBank == nil then Restocker.autoOpenAtBank = true end
