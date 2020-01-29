@@ -39,6 +39,7 @@ function events:ADDON_LOADED(name)
     Restocker.framePos = {}
     Restocker.autoOpenAtBank = false
     Restocker.autoOpenAtMerchant = false
+  end
 
 
   local f=InterfaceOptionsFrame;
