@@ -205,7 +205,7 @@ function core:CreateMenu()
 end
 
 
-
+-- Handle shiftclicks of items
 local origChatEdit_InsertLink = ChatEdit_InsertLink;
 ChatEdit_InsertLink = function(link)
   if core.addon.editBox:IsVisible() and core.addon.editBox:HasFocus() then
