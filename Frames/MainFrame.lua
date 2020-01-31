@@ -105,12 +105,32 @@ function core:CreateMenu()
     editBox:SetScript("OnEnterPressed", function(self)
       local text = self:GetText()
 
-      core:addItem(text);
+      core:addItem(text)
 
       self:SetText("")
       self:ClearFocus()
 
-    end);
+    end)
+    editBox:SetScript("OnMouseUp", function(self, button)
+      if button == "LeftButton" then
+        infoType, info1 = GetCursorInfo()
+        if infoType == "item" then
+          itemName = GetItemInfo(info1)
+          self:SetText(itemName)
+          self:SetFocus()
+          ClearCursor()
+        end
+      end
+    end)
+    editBox:SetScript("OnReceiveDrag", function(self)
+      infoType, info1 = GetCursorInfo()
+      if infoType == "item" then
+        itemName = GetItemInfo(info1)
+        self:SetText(itemName)
+        self:SetFocus()
+        ClearCursor()
+      end
+    end)
 
     addon.editBox = editBox
     addon.addBtn = addBtn
@@ -184,6 +204,17 @@ function core:CreateMenu()
   return core.addon
 end
 
+
+
+local origChatEdit_InsertLink = ChatEdit_InsertLink;
+ChatEdit_InsertLink = function(link)
+  if core.addon.editBox:IsVisible() and core.addon.editBox:HasFocus() then
+    itemName = GetItemInfo(link)
+    core.addon.editBox:Insert(itemName)
+    return true
+  end
+  return origChatEdit_InsertLink(link);
+end
 
 
 function core.DropDownMenuSelectProfile(self, arg1, arg2, checked)
