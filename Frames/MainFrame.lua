@@ -207,8 +207,8 @@ end
 local origChatEdit_InsertLink = ChatEdit_InsertLink;
 ChatEdit_InsertLink = function(link)
   if core.addon.editBox:IsVisible() and core.addon.editBox:HasFocus() then
-    itemName = GetItemInfo(link)
-    core:addItem(itemName)
+    --itemName = GetItemInfo(link)
+    core:addItem(link)
     return true
   end
   return origChatEdit_InsertLink(link);
@@ -225,7 +225,8 @@ end
 function core:addItem(text)
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
-  if string.find(text, "%d") then text = tonumber(text) end
+
+  if string.find(text, "%d") and not string.find(text, "Hitem") then text = tonumber(text) end
 
   local itemName, itemLink = GetItemInfo(text)
   local itemID
