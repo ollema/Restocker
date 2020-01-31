@@ -34,8 +34,8 @@ function events:ADDON_LOADED(name)
     Restocker = {}
     Restocker.autoBuy = true
     Restocker.profiles = {}
-    Restocker.currentProfile = "default"
     Restocker.profiles.default = {}
+    Restocker.currentProfile = "default"
     Restocker.framePos = {}
     Restocker.autoOpenAtBank = false
     Restocker.autoOpenAtMerchant = false
