@@ -116,8 +116,7 @@ function core:CreateMenu()
         infoType, info1 = GetCursorInfo()
         if infoType == "item" then
           itemName = GetItemInfo(info1)
-          self:SetText(itemName)
-          self:SetFocus()
+          core:addItem(text)
           ClearCursor()
         end
       end
@@ -126,8 +125,7 @@ function core:CreateMenu()
       infoType, info1 = GetCursorInfo()
       if infoType == "item" then
         itemName = GetItemInfo(info1)
-        self:SetText(itemName)
-        self:SetFocus()
+        core:addItem(text)
         ClearCursor()
       end
     end)
@@ -210,7 +208,7 @@ local origChatEdit_InsertLink = ChatEdit_InsertLink;
 ChatEdit_InsertLink = function(link)
   if core.addon.editBox:IsVisible() and core.addon.editBox:HasFocus() then
     itemName = GetItemInfo(link)
-    core.addon.editBox:Insert(itemName)
+    core:addItem(itemName)
     return true
   end
   return origChatEdit_InsertLink(link);
