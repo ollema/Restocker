@@ -6,6 +6,8 @@ core.restockedItems = false
 core.framepool = {}
 core.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
 
+local list = {}
+
 core.defaults = {
   prefix = "|cffff2200Restocker|r ",
   color = "ff2200",
@@ -111,6 +113,22 @@ end
 ]]
 function core:Update()
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
+  wipe(list)
+
+  for i, v in ipairs(currentProfile) do
+    tinsert(list, v)
+  end
+
+  if Restocker.sortListAlphabetically then
+    table.sort(list, function(a,b)
+      return a.itemName < b.itemName
+    end)
+
+  elseif Restocker.sortListNumerically then
+    table.sort(list, function(a,b)
+      return a.amount > b.amount
+    end)
+  end
 
   for _, f in ipairs(core.framepool) do
     f.isInUse = false
@@ -118,7 +136,7 @@ function core:Update()
     f:Hide()
   end
 
-  for _, item in ipairs(currentProfile) do
+  for _, item in ipairs(list) do
     local f = core:GetFirstEmpty()
     f:SetParent(core.addon.scrollChild)
     f.isInUse = true

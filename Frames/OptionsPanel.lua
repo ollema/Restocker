@@ -49,10 +49,52 @@ function core:CreateOptionsMenu()
   optionsPanel.autoOpenAtBankText = autoOpenAtBankText
 
 
+  local sortListAlphabetically = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
+  sortListAlphabetically:SetSize(25,25)
+  sortListAlphabetically:SetPoint("TOPLEFT", autoOpenAtBank, "BOTTOMLEFT", 0, 0)
+  sortListAlphabetically:SetScript("OnClick", function(self, button)
+    Restocker.sortListAlphabetically = self:GetChecked()
+    if self:GetChecked() then
+      optionsPanel.sortListNumerically:SetChecked(false)
+      Restocker.sortListNumerically = false
+    end
+    core:Update()
+  end)
+  sortListAlphabetically:SetChecked(Restocker.sortListAlphabetically)
+  optionsPanel.sortListAlphabetically = sortListAlphabetically
+
+  local sortListAlphabeticallyText = sortListAlphabetically:CreateFontString(nil, "OVERLAY")
+  sortListAlphabeticallyText:SetFontObject("GameFontNormal")
+  sortListAlphabeticallyText:SetPoint("LEFT", sortListAlphabetically, "RIGHT", 3, 0)
+  sortListAlphabeticallyText:SetText("Sort list alphabetically")
+  optionsPanel.sortListAlphabeticallyText = sortListAlphabeticallyText
+
+
+  local sortListNumerically = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
+  sortListNumerically:SetSize(25,25)
+  sortListNumerically:SetPoint("TOPLEFT", sortListAlphabetically, "BOTTOMLEFT", 0, 0)
+  sortListNumerically:SetScript("OnClick", function(self, button)
+    Restocker.sortListNumerically = self:GetChecked()
+    if self:GetChecked() then
+      optionsPanel.sortListAlphabetically:SetChecked(false)
+      Restocker.sortListAlphabetically = false
+    end
+    core:Update()
+  end)
+  sortListNumerically:SetChecked(Restocker.sortListNumerically)
+  optionsPanel.sortListNumerically = sortListNumerically
+
+  local sortListNumericallyText = sortListNumerically:CreateFontString(nil, "OVERLAY")
+  sortListNumericallyText:SetFontObject("GameFontNormal")
+  sortListNumericallyText:SetPoint("LEFT", sortListNumerically, "RIGHT", 3, 0)
+  sortListNumericallyText:SetText("Sort list by amount")
+  optionsPanel.sortListNumericallyText = sortListNumericallyText
+
+
 
   -- Profiles
   local profilesHeader = optionsPanel:CreateFontString(nil, "OVERLAY")
-  profilesHeader:SetPoint("TOPLEFT", autoOpenAtBank, "BOTTOMLEFT", -10, -20)
+  profilesHeader:SetPoint("TOPLEFT", sortListNumerically, "BOTTOMLEFT", -10, -20)
   profilesHeader:SetFontObject("GameFontNormalLarge")
   profilesHeader:SetText("Profiles")
 

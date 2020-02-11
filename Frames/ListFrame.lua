@@ -25,13 +25,17 @@ function core:addListFrame()
     local parent = self:GetParent();
     local text = parent.text:GetText();
 
+    core:Print(text)
+
     for i, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
-        tremove(Restocker.profiles[Restocker.currentProfile], parent.index)
+        core:Print(parent.index)
+        tremove(Restocker.profiles[Restocker.currentProfile], i)
+        core:Update();
         break
       end
     end
-    core:Update();
+    
   end);
 
   -- EDITBOX
@@ -55,6 +59,7 @@ function core:addListFrame()
     end
     editBox:ClearFocus()
     self:SetText(tonumber(amount));
+    core:Update()
 
   end);
   editBox:SetScript("OnKeyUp", function(self)
