@@ -1,3 +1,6 @@
+5.10
+- Fixed a bug when switching profiles while merchant window was open causing the addon to sell all items set to 0.
+
 5.9
 - Now allows shiftclicking and dragging items into textfield.
 

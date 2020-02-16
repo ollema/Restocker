@@ -1,6 +1,8 @@
 local _, core = ...;
 core.loaded = false
 core.itemWaitTable = {}
+core.bankIsOpen = false
+core.merchantIsOpen = false
 
 
 local function count(T)
@@ -70,6 +72,7 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
+  core.merchantIsOpen = true
   if not Restocker.autoBuy then return end
   if count(Restocker.profiles[Restocker.currentProfile]) == 0 then return end
 
@@ -147,6 +150,7 @@ end
 
 
 function events:MERCHANT_CLOSED(event, ...)
+  core.merchantIsOpen = false
   core:Hide()
 end
 
@@ -157,6 +161,7 @@ end
 
 
 function events:BANKFRAME_OPENED(event, ...)
+  core.bankIsOpen = true
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   if Restocker.autoOpenAtBank then core:Show() end
@@ -170,6 +175,7 @@ end
 
 
 function events:BANKFRAME_CLOSED(event, ...)
+  core.bankIsOpen = false
   core.currentlyRestocking = false
   core:Hide()
 end

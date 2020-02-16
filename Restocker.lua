@@ -237,7 +237,10 @@ function core:ChangeProfile(newProfile)
   UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
   print(core.defaults.prefix .. "current profile: ".. Restocker.currentProfile)
   core:Update()
-  core:triggerBankOpen()
+  
+  if core.bankIsOpen then
+    core:triggerBankOpen()
+  end
 end
 
 
