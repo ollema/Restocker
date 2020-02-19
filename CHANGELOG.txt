@@ -1,3 +1,6 @@
+5.11
+- Fixed addon continuing to grab stuff from bags / bank when there are no empty slots, will now stop when error comes up saying bags or bank is full.
+
 5.10
 - Fixed a bug when switching profiles while merchant window was open causing the addon to sell all items set to 0.
 

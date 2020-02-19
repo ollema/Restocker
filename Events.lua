@@ -23,6 +23,7 @@ events:RegisterEvent("BANKFRAME_CLOSED");
 events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
 events:RegisterEvent("PLAYER_LOGOUT");
 events:RegisterEvent("PLAYER_ENTERING_WORLD");
+events:RegisterEvent("UI_ERROR_MESSAGE");
 events:SetScript("OnEvent", function(self, event, ...)
   return self[event] and self[event](self, ...)
 end)
@@ -143,7 +144,7 @@ function events:MERCHANT_SHOW()
     end -- if buyTable[itemName] ~= nil
   end -- for loop GetMerchantNumItems()
 
-  
+
   if boughtSomething then core:Print(core.defaults.prefix .. "finished restocking from vendor.") end
 
 end
@@ -205,4 +206,11 @@ function events:PLAYER_LOGOUT()
   Restocker.framePos.relativePoint = relativePoint
   Restocker.framePos.xOfs = xOfs
   Restocker.framePos.yOfs = yOfs
+end
+
+
+function events:UI_ERROR_MESSAGE(id, messsage)
+  if id == 2 or id == 3 then -- catch inventory / bank full error messages
+    core.currentlyRestocking = false
+  end
 end

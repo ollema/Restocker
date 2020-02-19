@@ -25,17 +25,15 @@ function core:addListFrame()
     local parent = self:GetParent();
     local text = parent.text:GetText();
 
-    core:Print(text)
 
     for i, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
-        core:Print(parent.index)
         tremove(Restocker.profiles[Restocker.currentProfile], i)
         core:Update();
         break
       end
     end
-    
+
   end);
 
   -- EDITBOX
