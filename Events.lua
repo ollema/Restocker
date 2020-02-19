@@ -73,8 +73,9 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
-  core.merchantIsOpen = true
   if not Restocker.autoBuy then return end
+  if IsShiftKeyDown() then return end
+  core.merchantIsOpen = true
   if count(Restocker.profiles[Restocker.currentProfile]) == 0 then return end
 
 
@@ -162,11 +163,12 @@ end
 
 
 function events:BANKFRAME_OPENED(event, ...)
-  core.bankIsOpen = true
+  if IsShiftKeyDown() then return end
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   if Restocker.autoOpenAtBank then core:Show() end
 
+  core.bankIsOpen = true
   core.currentlyRestocking = true
 end
 
