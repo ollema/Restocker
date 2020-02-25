@@ -91,8 +91,8 @@ function core:pickupItem()
   end
 
   for _, item in ipairs(currentProfile) do
-    local numItemsInBags = GetItemCount(item.itemID, false)
-    local numItemsInBank = GetItemCount(item.itemID, true) - numItemsInBags
+    local numItemsInBags = GetItemCount(item.itemName, false)
+    local numItemsInBank = GetItemCount(item.itemName, true) - numItemsInBags
     local restockNum = item.amount
     local difference = restockNum-numItemsInBags
 
@@ -101,7 +101,7 @@ function core:pickupItem()
         for slot = GetContainerNumSlots(bag), 1, -1 do -- traverse bank bag slots backwards
           local _, stackSize, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
           if itemLink ~= nil then -- slot contains an item
-            local bitemName = GetItemInfo(itemID) -- get item name
+            local bitemName = GetItemInfo(itemLink) -- get item name
 
             if item.itemName == bitemName then -- if item in slot == restock item
               if difference < stackSize then -- if the restock number is less than the stack size
@@ -128,7 +128,7 @@ function core:pickupItem()
         for slot = GetContainerNumSlots(bag), 1, -1 do -- loop backward through bagslots
           local _, stackSize, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
           if itemLink ~= nil then -- slot contains an item
-            local itemName = GetItemInfo(itemID)
+            local itemName = GetItemInfo(itemLink)
             if itemName == item.itemName then -- item in slot is same as restock item
               core.didBankStuff = true
               return UseContainerItem(bag, slot) -- push item from inventory to bank
