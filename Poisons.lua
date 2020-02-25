@@ -124,5 +124,12 @@ function core:getPoisonReagents()
     end
   end
 
+  for reagent, val in pairs(T) do
+    local inBags = GetItemCount(reagent, false)
+    if inBags > 0 then
+      T[reagent] = T[reagent] - inBags
+    end
+  end
+
   return T
 end
