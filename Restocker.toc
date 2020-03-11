@@ -1,8 +1,8 @@
-## Interface: 11303
+## Interface: 11304
 ## Title: |cffff2200Restocker|r
 ## Author: RainForDays
 ## Notes: Restock items automatically
-## Version: 5.11
+## Version: 5.13
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: Restocker
 
