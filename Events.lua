@@ -4,6 +4,8 @@ core.itemWaitTable = {}
 core.bankIsOpen = false
 core.merchantIsOpen = false
 
+local lastTimeRestocked = GetTime()
+
 
 local function count(T)
   local i = 0
@@ -73,12 +75,13 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
-  if not Restocker.autoBuy then return end
-  if IsShiftKeyDown() then return end
+  if not Restocker.autoBuy then return end -- If not autobuying then return
+  if IsShiftKeyDown() then return end -- If shiftkey is down return
   core.merchantIsOpen = true
-  if count(Restocker.profiles[Restocker.currentProfile]) == 0 then return end
+  if count(Restocker.profiles[Restocker.currentProfile]) == 0 then return end -- If profile is emtpy then return
+  if GetTime() - lastTimeRestocked < 1 then return end -- If vendor repoened within 1 second then return (only activate addon once per second)
 
-
+  lastTimeRestocked = GetTime()
   local boughtSomething = false
   if Restocker.autoOpenAtMerchant then core:Show() end
 
