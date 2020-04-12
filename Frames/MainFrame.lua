@@ -143,7 +143,7 @@ function core:CreateMenu()
 
   -- Checkbox for autobuy
     local checkbox = CreateFrame("CheckButton", nil, addon, "UICheckButtonTemplate");
-    checkbox:SetPoint("TOPLEFT", addon.listInset, "BOTTOMLEFT", 2, -2)
+    checkbox:SetPoint("TOPLEFT", addon.listInset, "BOTTOMLEFT", 2, -1)
     checkbox:SetSize(25, 25)
     checkbox:SetChecked(Restocker.autoBuy);
     checkbox:SetScript("OnClick", function(self, button, down)
@@ -156,8 +156,33 @@ function core:CreateMenu()
     checkboxText:SetFontObject("GameFontHighlight");
     checkboxText:SetPoint("LEFT", checkbox, "RIGHT", 1, 1);
     checkboxText:SetText("Auto buy items");
-    addon.checkbox = checkboxText
+    addon.checkboxText = checkboxText
   -- // AUTOBUY
+
+
+  --[[
+    AUTO RESTOCK FROM BANK
+  ]]
+  -- Checkbox for auto restock from bank
+  local checkboxBank = CreateFrame("CheckButton", nil, addon, "UICheckButtonTemplate");
+  checkboxBank:SetPoint("LEFT", addon.checkbox, "RIGHT", 100, 0)
+  checkboxBank:SetSize(25, 25)
+  checkboxBank:SetChecked(Restocker.restockFromBank or true);
+  checkboxBank:SetScript("OnClick", function(self, button, down)
+    Restocker.restockFromBank = checkboxBank:GetChecked()
+  end);
+  addon.checkboxBank = checkboxBank
+
+  -- Auto restock from bank text
+  local checkboxBankText = addon:CreateFontString(nil, "OVERLAY");
+  checkboxBankText:SetFontObject("GameFontHighlight");
+  checkboxBankText:SetPoint("LEFT", checkboxBank, "RIGHT", 1, 1);
+  checkboxBankText:SetText("Restock from bank");
+  addon.checkboxBank = checkboxBankText
+-- // AUTOBUY
+
+
+
 
 
 

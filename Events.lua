@@ -38,6 +38,7 @@ function events:ADDON_LOADED(name)
   if not Restocker then
     Restocker = {}
     Restocker.autoBuy = true
+    Restocker.restockFromBank = true
     Restocker.profiles = {}
     Restocker.profiles.default = {}
     Restocker.currentProfile = "default"
@@ -167,6 +168,7 @@ end
 
 function events:BANKFRAME_OPENED(event, ...)
   if IsShiftKeyDown() then return end
+  if not Restocker.restockFromBank then return end
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   if Restocker.autoOpenAtBank then core:Show() end
