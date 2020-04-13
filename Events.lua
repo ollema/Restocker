@@ -46,6 +46,8 @@ function events:ADDON_LOADED(name)
     Restocker.autoOpenAtBank = false
     Restocker.autoOpenAtMerchant = false
   end
+  
+  Restocker.restockFromBank = true
 
 
   local f=InterfaceOptionsFrame;
