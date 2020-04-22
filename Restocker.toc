@@ -2,7 +2,7 @@
 ## Title: |cffff2200Restocker|r
 ## Author: RainForDays
 ## Notes: Restock items automatically
-## Version: 5.14
+## Version: 5.15
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: Restocker
 
