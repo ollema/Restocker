@@ -78,6 +78,7 @@ function events:PLAYER_ENTERING_WORLD(login, reloadui)
 end
 
 function events:MERCHANT_SHOW()
+  core.buying = true
   if not Restocker.autoBuy then return end -- If not autobuying then return
   if IsShiftKeyDown() then return end -- If shiftkey is down return
   core.merchantIsOpen = true
@@ -88,8 +89,8 @@ function events:MERCHANT_SHOW()
   local boughtSomething = false
   if Restocker.autoOpenAtMerchant then core:Show() end
 
-
-  local poisonReagentsNeeded = core:getPoisonReagents()
+  local _, class = UnitClass("PLAYER")
+  local poisonReagentsNeeded = class == "ROGUE" and core:getPoisonReagents() or {}
   local buyTable = {}
 
   local restockList = Restocker.profiles[Restocker.currentProfile]
@@ -125,6 +126,7 @@ function events:MERCHANT_SHOW()
 
   -- LOOP THROUGH VENDOR ITEMS
   for i = 0, GetMerchantNumItems() do
+    if not core.buying then return end
     local itemName, _, _, _, numAvailable = GetMerchantItemInfo(i)
     local itemLink = GetMerchantItemLink(i)
 
@@ -221,5 +223,6 @@ end
 function events:UI_ERROR_MESSAGE(id, messsage)
   if id == 2 or id == 3 then -- catch inventory / bank full error messages
     core.currentlyRestocking = false
+    core.buying = false
   end
 end
