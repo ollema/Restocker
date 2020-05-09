@@ -1,3 +1,7 @@
+6.0
+- Fixed the "Restock from bank" checkbox resetting each time the addon loaded
+- New experimental banking operation (should be way faster).
+
 5.12
 - Holding shift will now prevent the addon from doing its thing when opening bank/merchant
 - Now buys the right amount of reagents based on if you have any in your bags or not
