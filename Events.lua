@@ -45,10 +45,14 @@ function events:ADDON_LOADED(name)
     Restocker.framePos = {}
     Restocker.autoOpenAtBank = false
     Restocker.autoOpenAtMerchant = false
+    Restocker.restockFromBank = true
   end
-  
-  Restocker.restockFromBank = true
 
+  for profile, _ in pairs(Restocker.profiles) do
+    for _, item in ipairs(Restocker.profiles[profile]) do
+      item.itemID = tonumber(item.itemID)
+    end
+  end
 
   local f=InterfaceOptionsFrame;
   f:SetMovable(true);

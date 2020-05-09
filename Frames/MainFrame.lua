@@ -167,7 +167,7 @@ function core:CreateMenu()
   local checkboxBank = CreateFrame("CheckButton", nil, addon, "UICheckButtonTemplate");
   checkboxBank:SetPoint("LEFT", addon.checkbox, "RIGHT", 100, 0)
   checkboxBank:SetSize(25, 25)
-  checkboxBank:SetChecked(Restocker.restockFromBank or true);
+  checkboxBank:SetChecked(Restocker.restockFromBank);
   checkboxBank:SetScript("OnClick", function(self, button, down)
     Restocker.restockFromBank = checkboxBank:GetChecked()
   end);
@@ -261,7 +261,7 @@ function core:addItem(text)
     core.itemWaitTable[text] = true
     return
   elseif itemLink ~= nil then
-    itemID = string.match(itemLink, "item:(%d+)")
+    itemID = tonumber(string.match(itemLink, "item:(%d+)"))
     for _, item in ipairs(currentProfile) do
       if item.itemName:lower() == itemName:lower() then return end
     end
