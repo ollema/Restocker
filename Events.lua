@@ -224,7 +224,7 @@ function events:PLAYER_LOGOUT()
 end
 
 
-function events:UI_ERROR_MESSAGE(id, messsage)
+function events:UI_ERROR_MESSAGE(id, message)
   if id == 2 or id == 3 then -- catch inventory / bank full error messages
     core.currentlyRestocking = false
     core.buying = false
