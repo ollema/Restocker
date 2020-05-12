@@ -1,68 +1,71 @@
-local _, core = ...
+local _, RS = ...
 
-core.currentlyRestocking = false
-core.itemsRestocked = {}
-core.restockedItems = false
-core.framepool = {}
-core.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
+RS.currentlyRestocking = false
+RS.itemsRestocked = {}
+RS.restockedItems = false
+RS.framepool = {}
+RS.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
 
 local list = {}
 
-core.defaults = {
-  prefix = "|cffff2200Restocker|r ",
-  color = "ff2200",
-  slash = "|cffff2200/rs|r "
+RS.defaults = {
+  prefix = "|cff8d63ffRestocker|r ",
+  color = "8d63ff",
+  slash = "|cff8d63ff/rs|r "
 }
 
-
-function core:Print(...)
-  DEFAULT_CHAT_FRAME:AddMessage(tostringall(...))
+function RS:Print(...)
+  DEFAULT_CHAT_FRAME:AddMessage(RS.addonName .. "- " .. tostringall(...))
 end
 
 
-function core:Show()
-  local menu = core.addon or core:CreateMenu();
+RS.slashPrefix = "|cff8d63ff/restocker|r "
+RS.addonName = "|cff8d63ffRestocker|r "
+
+
+function RS:Show()
+  local menu = RS.addon or RS:CreateMenu();
   menu:Show()
-  core:Update()
+  RS:Update()
 end
 
 
-function core:Hide()
-  core.addon:Hide()
+function RS:Hide()
+  RS.addon:Hide()
 end
 
-function core:Toggle()
-  core:Show()
-  core:Hide()
-  core.addon:SetShown(not core.addon:IsShown())
+function RS:Toggle()
+  RS:Show()
+  RS:Hide()
+  RS.addon:SetShown(not RS.addon:IsShown())
 end
 
 
 
-core.commands = {
-  show = core.defaults.slash .. "show - Show the addon",
+RS.commands = {
+  show = RS.defaults.slash .. "show - Show the addon",
   profile = {
-    add = core.defaults.slash .. "profile add [name] - Adds a profile with [name]",
-    delete = core.defaults.slash .. "profile delete [name] - Deletes profile with [name]",
-    rename = core.defaults.slash .. "profile rename [name] - Renames current profile to [name]",
-    copy = core.defaults.slash .. "profile copy [name] - Copies profile [name] into current profile.",
+    add = RS.defaults.slash .. "profile add [name] - Adds a profile with [name]",
+    delete = RS.defaults.slash .. "profile delete [name] - Deletes profile with [name]",
+    rename = RS.defaults.slash .. "profile rename [name] - Renames current profile to [name]",
+    copy = RS.defaults.slash .. "profile copy [name] - Copies profile [name] into current profile.",
   }
 }
 
 --[[
   SLASH COMMANDS
 ]]
-function core:SlashCommand(args)
+function RS:SlashCommand(args)
   local command, rest = strsplit(" ", args, 2)
   command = command:lower()
 
   if command == "show" then
-    core:Show()
+    RS:Show()
 
   elseif command == "profile" then
     if rest == "" or rest == nil then
-      for _,v in pairs(core.commands.profile) do
-        core:Print(v)
+      for _,v in pairs(RS.commands.profile) do
+        RS:Print(v)
       end
       return
     end
@@ -71,47 +74,47 @@ function core:SlashCommand(args)
 
 
     if subcommand == "add" then
-      core:AddProfile(name)
+      RS:AddProfile(name)
 
     elseif subcommand == "delete" then
-      core:DeleteProfile(name)
+      RS:DeleteProfile(name)
 
     elseif subcommand == "rename" then
-      core:RenameCurrentProfile(name)
+      RS:RenameCurrentProfile(name)
 
     elseif subcommand == "copy" then
-      core:CopyProfile(name)
+      RS:CopyProfile(name)
     end
 
   elseif command == "help" then
 
-    for _, v in pairs(core.commands) do
+    for _, v in pairs(RS.commands) do
       if type(v) == "table" then
         for _, vv in pairs(v) do
-          core:Print(vv)
+          RS:Print(vv)
         end
       else
-        core:Print(v)
+        RS:Print(v)
       end
     end
     return
 
   elseif command == "config" then
-    InterfaceOptionsFrame_OpenToCategory(core.optionsPanel)
-    InterfaceOptionsFrame_OpenToCategory(core.optionsPanel)
+    InterfaceOptionsFrame_OpenToCategory(RS.optionsPanel)
+    InterfaceOptionsFrame_OpenToCategory(RS.optionsPanel)
     return
 
   else
-    core:Toggle()
+    RS:Toggle()
   end
-  core:Update()
+  RS:Update()
 end
 
 
 --[[
   UPDATE
 ]]
-function core:Update()
+function RS:Update()
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
   wipe(list)
 
@@ -130,15 +133,15 @@ function core:Update()
     end)
   end
 
-  for _, f in ipairs(core.framepool) do
+  for _, f in ipairs(RS.framepool) do
     f.isInUse = false
-    f:SetParent(core.hiddenFrame)
+    f:SetParent(RS.hiddenFrame)
     f:Hide()
   end
 
   for _, item in ipairs(list) do
-    local f = core:GetFirstEmpty()
-    f:SetParent(core.addon.scrollChild)
+    local f = RS:GetFirstEmpty()
+    f:SetParent(RS.addon.scrollChild)
     f.isInUse = true
     f.editBox:SetText(item.amount)
     f.text:SetText(item.itemName)
@@ -146,23 +149,23 @@ function core:Update()
   end
 
   local height = 0
-  for _, f in ipairs(core.framepool) do
+  for _, f in ipairs(RS.framepool) do
     if f.isInUse then height = height+15 end
   end
-  core.addon.scrollChild:SetHeight(height)
+  RS.addon.scrollChild:SetHeight(height)
 end
 
 
 --[[
   GET FIRST UNUSED SCROLLCHILD FRAME
 ]]
-function core:GetFirstEmpty()
-  for i, frame in ipairs(core.framepool) do
+function RS:GetFirstEmpty()
+  for i, frame in ipairs(RS.framepool) do
     if not frame.isInUse then
       return frame
     end
   end
-  return core:addListFrame()
+  return RS:addListFrame()
 end
 
 
@@ -170,15 +173,15 @@ end
 --[[
   ADD PROFILE
 ]]
-function core:AddProfile(newProfile)
+function RS:AddProfile(newProfile)
   Restocker.currentProfile = newProfile
   Restocker.profiles[newProfile] = {}
 
-  local menu = core.addon or core:CreateMenu()
+  local menu = RS.addon or RS:CreateMenu()
   menu:Show()
-  core:Update()
+  RS:Update()
 
-  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+  UIDropDownMenu_SetText(RS.addon.profileDropDownMenu, Restocker.currentProfile)
 
 
 end
@@ -187,7 +190,7 @@ end
 --[[
   DELETE PROFILE
 ]]
-function core:DeleteProfile(profile)
+function RS:DeleteProfile(profile)
   local currentProfile = Restocker.currentProfile
 
   if currentProfile == profile then
@@ -205,17 +208,17 @@ function core:DeleteProfile(profile)
   end
 
 
-  UIDropDownMenu_SetText(core.optionsPanel.deleteProfileMenu, "")
-  local menu = core.addon or core:CreateMenu()
-  core.profileSelectedForDeletion = ""
-  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+  UIDropDownMenu_SetText(RS.optionsPanel.deleteProfileMenu, "")
+  local menu = RS.addon or RS:CreateMenu()
+  RS.profileSelectedForDeletion = ""
+  UIDropDownMenu_SetText(RS.addon.profileDropDownMenu, Restocker.currentProfile)
 
 end
 
 --[[
   RENAME PROFILE
 ]]
-function core:RenameCurrentProfile(newName)
+function RS:RenameCurrentProfile(newName)
   local currentProfile = Restocker.currentProfile
 
   Restocker.profiles[newName] = Restocker.profiles[currentProfile]
@@ -224,22 +227,26 @@ function core:RenameCurrentProfile(newName)
   Restocker.currentProfile = newName
 
 
-  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
+  UIDropDownMenu_SetText(RS.addon.profileDropDownMenu, Restocker.currentProfile)
 end
 
 
 --[[
   CHANGE PROFILE
 ]]
-function core:ChangeProfile(newProfile)
+function RS:ChangeProfile(newProfile)
   Restocker.currentProfile = newProfile
 
-  UIDropDownMenu_SetText(core.addon.profileDropDownMenu, Restocker.currentProfile)
-  print(core.defaults.prefix .. "current profile: ".. Restocker.currentProfile)
-  core:Update()
+  UIDropDownMenu_SetText(RS.addon.profileDropDownMenu, Restocker.currentProfile)
+  print(RS.defaults.prefix .. "current profile: ".. Restocker.currentProfile)
+  RS:Update()
   
-  if core.bankIsOpen then
-    core:triggerBankOpen()
+  if RS.bankIsOpen then
+    RS:BANKFRAME_OPENED()
+  end
+
+  if RS.merchantIsOpen then
+    RS:MERCHANT_SHOW()
   end
 end
 
@@ -247,8 +254,8 @@ end
 --[[
   COPY PROFILE
 ]]
-function core:CopyProfile(profileToCopy)
+function RS:CopyProfile(profileToCopy)
   local copyProfile = CopyTable(Restocker.profiles[profileToCopy])
   Restocker.profiles[Restocker.currentProfile] = copyProfile
-  core:Update()
+  RS:Update()
 end

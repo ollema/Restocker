@@ -1,16 +1,16 @@
-local _, core = ...;
+local _, RS = ...;
 
-function core:addListFrame()
+function RS:addListFrame()
 
-  local frame = CreateFrame("Frame", nil, core.hiddenFrame)
-  frame.index = #core.framepool+1
-  frame:SetSize(core.addon.scrollChild:GetWidth(), 20);
-  if #core.framepool == 0 then
-    frame:SetPoint("TOP", core.addon.scrollChild, "TOP")
+  local frame = CreateFrame("Frame", nil, RS.hiddenFrame)
+  frame.index = #RS.framepool+1
+  frame:SetSize(RS.addon.scrollChild:GetWidth(), 20);
+  if #RS.framepool == 0 then
+    frame:SetPoint("TOP", RS.addon.scrollChild, "TOP")
   else
-    frame:SetPoint("TOP", core.framepool[#core.framepool], "BOTTOM")
+    frame:SetPoint("TOP", RS.framepool[#RS.framepool], "BOTTOM")
   end
-  core.addon.scrollChild:SetHeight(#core.framepool*20)
+  RS.addon.scrollChild:SetHeight(#RS.framepool*20)
   -- ITEM TEXT
   local text = frame:CreateFontString(nil, "OVERLAY");
   text:SetFontObject("GameFontHighlight");
@@ -29,7 +29,7 @@ function core:addListFrame()
     for i, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
       if item.itemName == text then
         tremove(Restocker.profiles[Restocker.currentProfile], i)
-        core:Update();
+        RS:Update();
         break
       end
     end
@@ -57,7 +57,7 @@ function core:addListFrame()
     end
     editBox:ClearFocus()
     self:SetText(tonumber(amount));
-    core:Update()
+    RS:Update()
 
   end);
   editBox:SetScript("OnKeyUp", function(self)
@@ -81,14 +81,14 @@ function core:addListFrame()
   frame.isInUse = true
   frame:Show()
 
-  tinsert(core.framepool, frame)
+  tinsert(RS.framepool, frame)
   return frame
 end
 
 
-function core:addListFrames()
+function RS:addListFrames()
   for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
-    local frame = core:addListFrame()
+    local frame = RS:addListFrame()
     frame.text:SetText(item.itemName)
     frame.editBox:SetText(item.amount)
   end

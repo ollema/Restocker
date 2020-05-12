@@ -1,9 +1,9 @@
-local _, core = ...;
+local _, RS = ...;
 
-core.didBankStuff = false
+RS.didBankStuff = false
 local containerFreeSlots = {}
-core.justSplit = false
-core.splitLoc = {}
+RS.justSplit = false
+RS.splitLoc = {}
 
 local bankBags = {-1,5,6,7,8,9,10}
 local bankBagsReversed = {10,9,8,7,6,5,-1}
@@ -226,7 +226,6 @@ local function bankTransfer()
         if itemID and not locked then
           local inRestockList = IsItemInRestockList(itemID)
           local itemStackSize = select(8, GetItemInfo(itemLink))
-          
 
           if inRestockList then
             local item = currentProfile[GetRestockItemIndex(itemID)]
@@ -257,8 +256,8 @@ local function bankTransfer()
 
   -- 
   if rightClickedItem == false and transferredToBank == false and hasSplitItems == false then
-    core.currentlyRestocking = false
-    core:Print(core.defaults.prefix .. "finished restocking from bank.")
+    RS.currentlyRestocking = false
+    RS:Print("finished restocking from bank.")
   end
 end
 
@@ -276,7 +275,7 @@ local timer = 0
 
 onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
   timer = timer+elapsed
-  if core.currentlyRestocking then
+  if RS.currentlyRestocking then
     --if timer >= ONUPDATE_INTERVAL then
       timer = 0
       if somethingLocked() and not CursorHasItem() then return end
@@ -308,12 +307,12 @@ end)
 
 
 --[[
-local _, core = ...;
+local _, RS = ...;
 
-core.didBankStuff = false
+RS.didBankStuff = false
 local containerFreeSlots = {}
-core.justSplit = false
-core.splitLoc = {}
+RS.justSplit = false
+RS.splitLoc = {}
 
 
 
@@ -332,11 +331,11 @@ local timer = 0
 
 onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
   timer = timer+elapsed
-  if core.currentlyRestocking then
+  if RS.currentlyRestocking then
     if timer >= ONUPDATE_INTERVAL then
       timer = 0
 
-      core:pickupItem()
+      RS:pickupItem()
     end
   end
 end)
@@ -351,9 +350,9 @@ local function putIntoEmptyBankSlot()
 
     if count(containerFreeSlots) > 0 then
       PickupContainerItem(bag, containerFreeSlots[1])
-      core.splitLoc.bag = bag
-      core.splitLoc.slot = containerFreeSlots[1]
-      core.justSplit = true
+      RS.splitLoc.bag = bag
+      RS.splitLoc.slot = containerFreeSlots[1]
+      RS.justSplit = true
       return
     end
 
@@ -362,8 +361,8 @@ end
 
 local function pickupSpecificSlot(bag, slot)
   UseContainerItem(bag, slot)
-  wipe(core.splitLoc)
-  core.justSplit = false
+  wipe(RS.splitLoc)
+  RS.justSplit = false
 end
 
 
@@ -390,14 +389,14 @@ end
 
 
 
-function core:pickupItem()
+function RS:pickupItem()
   if anythingLocked() then return end
   local bankBags = {-1,5,6,7,8,9,10}
   local bankBagsReversed = {10,9,8,7,6,5,-1}
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
-  if core.justSplit then
-    return pickupSpecificSlot(core.splitLoc.bag, core.splitLoc.slot)
+  if RS.justSplit then
+    return pickupSpecificSlot(RS.splitLoc.bag, RS.splitLoc.slot)
   end
 
   for _, item in ipairs(currentProfile) do
@@ -417,12 +416,12 @@ function core:pickupItem()
               if difference < stackSize then -- if the restock number is less than the stack size
                 SplitContainerItem(bag, slot, difference) -- split the item
                 putIntoEmptyBankSlot()
-                core.didBankStuff = true
+                RS.didBankStuff = true
                 return
 
               else -- difference >= stackSize
                 UseContainerItem(bag, slot) -- if the restock num is higher than the stack size then just return rightclick that stack
-                core.didBankStuff = true
+                RS.didBankStuff = true
                 return
               end
 
@@ -440,7 +439,7 @@ function core:pickupItem()
           if itemLink ~= nil then -- slot contains an item
             local itemName = GetItemInfo(itemLink)
             if itemName == item.itemName then -- item in slot is same as restock item
-              core.didBankStuff = true
+              RS.didBankStuff = true
               return UseContainerItem(bag, slot) -- push item from inventory to bank
               -- do this even if this results in less than the restock amount in bags as it will trigger the
               -- above code and will grab a partial stack to complete the numbers in inventory
@@ -453,11 +452,11 @@ function core:pickupItem()
     end
   end -- for each Restocker.Item
 
-  core.currentlyRestocking = false
-  if core.didBankStuff then
-    core:Print(core.defaults.prefix .. "finished restocking from bank.")
+  RS.currentlyRestocking = false
+  if RS.didBankStuff then
+    RS:Print(RS.defaults.prefix .. "finished restocking from bank.")
   end
-  core.didBankStuff = false
+  RS.didBankStuff = false
 end
 
 ]]

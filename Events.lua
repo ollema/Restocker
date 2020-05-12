@@ -1,8 +1,8 @@
-local _, core = ...;
-core.loaded = false
-core.itemWaitTable = {}
-core.bankIsOpen = false
-core.merchantIsOpen = false
+local _, RS = ...;
+RS.loaded = false
+RS.itemWaitTable = {}
+RS.bankIsOpen = false
+RS.merchantIsOpen = false
 
 local lastTimeRestocked = GetTime()
 
@@ -65,36 +65,36 @@ function events:ADDON_LOADED(name)
   SLASH_RESTOCKER1= "/restocker";
   SLASH_RESTOCKER2= "/rs";
   SlashCmdList.RESTOCKER = function(msg)
-    core:SlashCommand(msg)
+    RS:SlashCommand(msg)
   end
 
-  core:CreateOptionsMenu()
-  core:Show()
-  core:Hide()
-  core.loaded = true
+  RS:CreateOptionsMenu()
+  RS:Show()
+  RS:Hide()
+  RS.loaded = true
 end
 
 function events:PLAYER_ENTERING_WORLD(login, reloadui)
-  if not core.loaded then return end
+  if not RS.loaded then return end
   if login or reloadui then
-    core:Print("|cffff2200Restocker|r loaded. /rs or /restocker to open addon.")
+    print(RS.addonName .. "loaded. "..RS.slashPrefix.."for settings.")
   end
 end
 
 function events:MERCHANT_SHOW()
-  core.buying = true
+  RS.buying = true
   if not Restocker.autoBuy then return end -- If not autobuying then return
   if IsShiftKeyDown() then return end -- If shiftkey is down return
-  core.merchantIsOpen = true
+  RS.merchantIsOpen = true
   if count(Restocker.profiles[Restocker.currentProfile]) == 0 then return end -- If profile is emtpy then return
   if GetTime() - lastTimeRestocked < 1 then return end -- If vendor repoened within 1 second then return (only activate addon once per second)
 
   lastTimeRestocked = GetTime()
   local boughtSomething = false
-  if Restocker.autoOpenAtMerchant then core:Show() end
+  if Restocker.autoOpenAtMerchant then RS:Show() end
 
   local _, class = UnitClass("PLAYER")
-  local poisonReagentsNeeded = class == "ROGUE" and core:getPoisonReagents() or {}
+  local poisonReagentsNeeded = class == "ROGUE" and RS:getPoisonReagents() or {}
   local buyTable = {}
 
   local restockList = Restocker.profiles[Restocker.currentProfile]
@@ -130,7 +130,7 @@ function events:MERCHANT_SHOW()
 
   -- LOOP THROUGH VENDOR ITEMS
   for i = 0, GetMerchantNumItems() do
-    if not core.buying then return end
+    if not RS.buying then return end
     local itemName, _, _, _, numAvailable = GetMerchantItemInfo(i)
     local itemLink = GetMerchantItemLink(i)
 
@@ -158,19 +158,15 @@ function events:MERCHANT_SHOW()
   end -- for loop GetMerchantNumItems()
 
 
-  if boughtSomething then core:Print(core.defaults.prefix .. "finished restocking from vendor.") end
+  if boughtSomething then RS:Print("finished restocking from vendor.") end
 
 end
 
 
 function events:MERCHANT_CLOSED(event, ...)
-  core.merchantIsOpen = false
-  core:Hide()
+  RS.merchantIsOpen = false
+  RS:Hide()
 end
-
-
-
-
 
 
 
@@ -179,21 +175,24 @@ function events:BANKFRAME_OPENED(event, ...)
   if not Restocker.restockFromBank then return end
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
-  if Restocker.autoOpenAtBank then core:Show() end
+  if Restocker.autoOpenAtBank then RS:Show() end
 
-  core.bankIsOpen = true
-  core.currentlyRestocking = true
+  RS.bankIsOpen = true
+  RS.currentlyRestocking = true
 end
 
-function core:triggerBankOpen()
+function RS:BANKFRAME_OPENED()
   events:BANKFRAME_OPENED()
 end
 
+function RS:MERCHANT_SHOW()
+  events:MERCHANT_SHOW()
+end
 
 function events:BANKFRAME_CLOSED(event, ...)
-  core.bankIsOpen = false
-  core.currentlyRestocking = false
-  core:Hide()
+  RS.bankIsOpen = false
+  RS.currentlyRestocking = false
+  RS:Hide()
 end
 
 
@@ -201,9 +200,9 @@ end
 
 function events:GET_ITEM_INFO_RECEIVED(itemID, success)
   if success == nil then return end
-  if core.itemWaitTable[itemID] then
-    core.itemWaitTable[itemID] = nil
-    core:addItem(itemID)
+  if RS.itemWaitTable[itemID] then
+    RS.itemWaitTable[itemID] = nil
+    RS:addItem(itemID)
   end
 end
 
@@ -212,10 +211,10 @@ end
 function events:PLAYER_LOGOUT()
   if Restocker.framePos == nil then Restocker.framePos = {} end
 
-  core:Show()
-  core:Hide()
+  RS:Show()
+  RS:Hide()
 
-  local point, relativeTo, relativePoint, xOfs, yOfs = core.addon:GetPoint(core.addon:GetNumPoints())
+  local point, relativeTo, relativePoint, xOfs, yOfs = RS.addon:GetPoint(RS.addon:GetNumPoints())
 
   Restocker.framePos.point = point
   Restocker.framePos.relativePoint = relativePoint
@@ -226,7 +225,7 @@ end
 
 function events:UI_ERROR_MESSAGE(id, message)
   if id == 2 or id == 3 then -- catch inventory / bank full error messages
-    core.currentlyRestocking = false
-    core.buying = false
+    RS.currentlyRestocking = false
+    RS.buying = false
   end
 end

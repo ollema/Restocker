@@ -1,10 +1,10 @@
-local _, core = ...
+local _, RS = ...
 
-core.profileSelectedForDeletion = ""
+RS.profileSelectedForDeletion = ""
 
 
 -- INTERFACE OPTIONS PANEL
-function core:CreateOptionsMenu()
+function RS:CreateOptionsMenu()
   local optionsPanel = CreateFrame("Frame", "RestockerOptions", UIParent)
   optionsPanel.name = "Restocker"
 
@@ -58,7 +58,7 @@ function core:CreateOptionsMenu()
       optionsPanel.sortListNumerically:SetChecked(false)
       Restocker.sortListNumerically = false
     end
-    core:Update()
+    RS:Update()
   end)
   sortListAlphabetically:SetChecked(Restocker.sortListAlphabetically)
   optionsPanel.sortListAlphabetically = sortListAlphabetically
@@ -79,7 +79,7 @@ function core:CreateOptionsMenu()
       optionsPanel.sortListAlphabetically:SetChecked(false)
       Restocker.sortListAlphabetically = false
     end
-    core:Update()
+    RS:Update()
   end)
   sortListNumerically:SetChecked(Restocker.sortListNumerically)
   optionsPanel.sortListNumerically = sortListNumerically
@@ -114,7 +114,7 @@ function core:CreateOptionsMenu()
     local editBox = self:GetParent().addProfileEditBox
     local text = editBox:GetText()
 
-    core:AddProfile(text);
+    RS:AddProfile(text);
 
     editBox:SetText("")
     editBox:ClearFocus()
@@ -138,7 +138,7 @@ function core:CreateOptionsMenu()
 
       info.text = profileName
       info.arg1 = profileName
-      info.func = core.selectProfileForDeletion
+      info.func = RS.selectProfileForDeletion
       info.checked = false
 
       UIDropDownMenu_AddButton(info, 1)
@@ -155,18 +155,18 @@ function core:CreateOptionsMenu()
   deleteProfileButton:SetNormalFontObject("GameFontNormal");
   deleteProfileButton:SetHighlightFontObject("GameFontHighlight");
   deleteProfileButton:SetScript("OnClick", function(self, button, down)
-    core:DeleteProfile(core.profileSelectedForDeletion)
+    RS:DeleteProfile(RS.profileSelectedForDeletion)
   end);
   optionsPanel.deleteProfileButton = deleteProfileButton
 
 
 
-  core.optionsPanel = optionsPanel
+  RS.optionsPanel = optionsPanel
   InterfaceOptions_AddCategory(optionsPanel)
 end
 
 
-function core.selectProfileForDeletion(self, arg1, arg2, checked)
-  core.profileSelectedForDeletion = arg1
-  UIDropDownMenu_SetText(core.optionsPanel.deleteProfileMenu, core.profileSelectedForDeletion)
+function RS.selectProfileForDeletion(self, arg1, arg2, checked)
+  RS.profileSelectedForDeletion = arg1
+  UIDropDownMenu_SetText(RS.optionsPanel.deleteProfileMenu, RS.profileSelectedForDeletion)
 end

@@ -1,10 +1,10 @@
-local _, core = ...;
+local _, RS = ...;
 
 
-core.hiddenFrame = CreateFrame("Frame", nil, UIParent)
-core.hiddenFrame:Hide()
+RS.hiddenFrame = CreateFrame("Frame", nil, UIParent)
+RS.hiddenFrame:Hide()
 
-function core:CreateMenu()
+function RS:CreateMenu()
   --[[
     FRAME
   ]]
@@ -90,7 +90,7 @@ function core:CreateMenu()
       local editBox = self:GetParent():GetParent().editBox
       local text = editBox:GetText()
 
-      core:addItem(text);
+      RS:addItem(text);
 
       editBox:SetText("")
       editBox:ClearFocus()
@@ -105,7 +105,7 @@ function core:CreateMenu()
     editBox:SetScript("OnEnterPressed", function(self)
       local text = self:GetText()
 
-      core:addItem(text)
+      RS:addItem(text)
 
       self:SetText("")
       self:ClearFocus()
@@ -116,7 +116,7 @@ function core:CreateMenu()
         infoType, info1 = GetCursorInfo()
         if infoType == "item" then
           itemName = GetItemInfo(info1)
-          core:addItem(text)
+          RS:addItem(text)
           ClearCursor()
         end
       end
@@ -125,7 +125,7 @@ function core:CreateMenu()
       infoType, info1 = GetCursorInfo()
       if infoType == "item" then
         itemName = GetItemInfo(info1)
-        core:addItem(text)
+        RS:addItem(text)
         ClearCursor()
       end
     end)
@@ -210,7 +210,7 @@ function core:CreateMenu()
 
       info.text = profileName
       info.arg1 = profileName
-      info.func = core.DropDownMenuSelectProfile
+      info.func = RS.DropDownMenuSelectProfile
       info.checked = profileName == Restocker.currentProfile
 
       UIDropDownMenu_AddButton(info, 1)
@@ -223,31 +223,31 @@ function core:CreateMenu()
   tinsert(UISpecialFrames, "RestockerMainFrame")
   addon:Hide()
 
-  core.addon = addon
-  return core.addon
+  RS.addon = addon
+  return RS.addon
 end
 
 
 -- Handle shiftclicks of items
 local origChatEdit_InsertLink = ChatEdit_InsertLink;
 ChatEdit_InsertLink = function(link)
-  if core.addon.editBox:IsVisible() and core.addon.editBox:HasFocus() then
+  if RS.addon.editBox:IsVisible() and RS.addon.editBox:HasFocus() then
     --itemName = GetItemInfo(link)
-    core:addItem(link)
+    RS:addItem(link)
     return true
   end
   return origChatEdit_InsertLink(link);
 end
 
 
-function core.DropDownMenuSelectProfile(self, arg1, arg2, checked)
-  core:ChangeProfile(arg1)
+function RS.DropDownMenuSelectProfile(self, arg1, arg2, checked)
+  RS:ChangeProfile(arg1)
 end
 
 
 
 
-function core:addItem(text)
+function RS:addItem(text)
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
 
 
@@ -258,7 +258,7 @@ function core:addItem(text)
   local itemName, itemLink = GetItemInfo(text)
   local itemID
   if itemLink == nil then
-    core.itemWaitTable[text] = true
+    RS.itemWaitTable[text] = true
     return
   elseif itemLink ~= nil then
     itemID = tonumber(string.match(itemLink, "item:(%d+)"))
@@ -275,5 +275,5 @@ function core:addItem(text)
   T.amount = 1
   tinsert(Restocker.profiles[Restocker.currentProfile], T)
 
-  core:Update()
+  RS:Update()
 end
