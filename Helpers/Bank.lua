@@ -1,12 +1,15 @@
 local _, RS = ...;
 
 RS.didBankStuff = false
-local containerFreeSlots = {}
 RS.justSplit = false
 RS.splitLoc = {}
 
-local bankBags = {-1,5,6,7,8,9,10}
-local bankBagsReversed = {10,9,8,7,6,5,-1}
+local BANK_BAGS = {-1,5,6,7,8,9,10}
+local BANK_BAGS_REVERSED = {10,9,8,7,6,5,-1}
+
+local GetContainerItemInfo = _G.GetContainerItemInfo
+
+
 
 local function count(T)
   local i = 0
@@ -27,7 +30,7 @@ local function somethingLocked()
     end
   end
 
-  for _,bag in ipairs(bankBagsReversed) do
+  for _,bag in ipairs(BANK_BAGS_REVERSED) do
     for slot = 1, GetContainerNumSlots(bag) do
       local _, _, locked = GetContainerItemInfo(bag, slot)
       if locked then
@@ -41,7 +44,7 @@ end
 
 
 local function IsItemInRestockList(item)
-  local type = ""
+  local type
   if tonumber(item) then
     type = "itemID"
   elseif string.find(item, "Hitem:") then
@@ -60,7 +63,7 @@ end
 
 
 local function GetRestockItemIndex(item)
-  local type = ""
+  local type
   if tonumber(item) then
     type = "itemID"
   elseif string.find(item, "Hitem:") then
@@ -91,25 +94,6 @@ local function GetItemsInBags()
   end
   return T
 end
-
-
-local function GetFreeBagSlots()
-  local T = {}
-  for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-    for slot = 1, GetContainerNumSlots(bag) do
-      local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
-      if not itemID then
-        local slot = {}
-        slot.bag = bag
-        slot.slot = slot
-        tinsert(T, slot)
-      end
-    end
-  end
-  return T
-end
-
-
 
 local function PutSplitItemIntoBags(item, amountOnMouse)
   if not CursorHasItem() then return end
@@ -147,7 +131,6 @@ end
 
 local function bankTransfer()
   local itemsInBags = GetItemsInBags()
-  local freeSlots = GetFreeBagSlots()
 
   local currentProfile = Restocker.profiles[Restocker.currentProfile]
   local rightClickedItem = false
@@ -159,14 +142,13 @@ local function bankTransfer()
   --
   for bag = NUM_BAG_SLOTS, 0, -1 do
     for slot = GetContainerNumSlots(bag), 1, -1 do
-      local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+      local _, itemCount, locked, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
       if itemID then
         local inRestockList = IsItemInRestockList(itemID)
 
         if not locked and inRestockList then
           local item = currentProfile[GetRestockItemIndex(itemID)]
           local numInBags = itemsInBags[item.itemName] or 0
-          --local numInBank = GetItemCount(itemLink, true) - numInBags
           local restockNum = item.amount
           local difference = restockNum-numInBags
 
@@ -184,22 +166,20 @@ local function bankTransfer()
   end -- for bag
 
 
-
-
   --
   --  BANK
   --
+  -- full stacks
   if not transferredToBank then
-    for _, bag in ipairs(bankBagsReversed) do
+    for _, bag in ipairs(BANK_BAGS_REVERSED) do
       for slot = GetContainerNumSlots(bag), 1, -1 do
-        local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local _, itemCount, locked, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
         if itemID and not locked then
           local inRestockList = IsItemInRestockList(itemID)
 
           if not locked and inRestockList then
             local item = currentProfile[GetRestockItemIndex(itemID)]
             local numInBags = itemsInBags[item.itemName] or 0
-            --local numInBank = GetItemCount(itemLink, true) - numInBags
             local restockNum = item.amount
             local difference = restockNum-numInBags
 
@@ -217,27 +197,29 @@ local function bankTransfer()
   end
 
 
-
+  -- split stacks
   if not rightClickedItem then
-    for _, bag in ipairs(bankBagsReversed) do
+    for _, bag in ipairs(BANK_BAGS_REVERSED) do
       for slot = GetContainerNumSlots(bag), 1, -1 do
-        local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local _, itemCount, locked, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
 
         if itemID and not locked then
           local inRestockList = IsItemInRestockList(itemID)
-          local itemStackSize = select(8, GetItemInfo(itemLink))
+          local itemStackSize = select(8, GetItemInfo(itemID))
 
           if inRestockList then
             local item = currentProfile[GetRestockItemIndex(itemID)]
             local numInBags = itemsInBags[item.itemName] or 0
-            --local numInBank = GetItemCount(itemLink, true) - numInBags
             local restockNum = item.amount
             local difference = restockNum-numInBags
 
             if difference > 0 and itemCount > difference then
               if mod(difference+numInBags, itemStackSize) == 0 then
+                -- if the amount we need creates a full stack in the inventory we simply have to pick up the item and place it on the incomplete stack in our inventory
+                -- if we split stacks here we get an error saying "couldn't split those items."
                 PickupContainerItem(bag, slot)
               else
+                -- if the amount of items we need doesn't create a full stack then we split the stack in the bank and merge it with the one in our inventory.
                 SplitContainerItem(bag, slot, difference)
               end
 
@@ -254,10 +236,10 @@ local function bankTransfer()
   end -- not right clicked an item
 
 
-  -- 
+  --
   if rightClickedItem == false and transferredToBank == false and hasSplitItems == false then
     RS.currentlyRestocking = false
-    RS:Print("finished restocking from bank.")
+    RS:Print("Finished restocking from bank.")
   end
 end
 
@@ -276,7 +258,6 @@ local timer = 0
 onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
   timer = timer+elapsed
   if RS.currentlyRestocking then
-    --if timer >= ONUPDATE_INTERVAL then
       timer = 0
       if somethingLocked() and not CursorHasItem() then return end
       if coroutine.status(restockerCoroutine) == "running" then return end
@@ -285,178 +266,5 @@ onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
       if resume == false then
         restockerCoroutine = coroutine.create(bankTransfer)
       end
-    --end
-
-    --[[
-
-      if timer >= ONUPDATE_INTERVAL then
-        timer = 0
-        if coroutine.resume(restockerCoroutine) == false then
-          restockerCoroutine = coroutine.create(bankTransfer)
-        end
-        --bankTransfer()
-      end
-    ]]
   end
 end)
-
-
-
-
-
-
-
---[[
-local _, RS = ...;
-
-RS.didBankStuff = false
-local containerFreeSlots = {}
-RS.justSplit = false
-RS.splitLoc = {}
-
-
-
-local function count(T)
-  local i = 0
-  for _,_ in pairs(T) do
-    i = i+1
-  end
-  return i
-end
-
-
-local onUpdateFrame = CreateFrame("Frame")
-local ONUPDATE_INTERVAL = 0.2
-local timer = 0
-
-onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
-  timer = timer+elapsed
-  if RS.currentlyRestocking then
-    if timer >= ONUPDATE_INTERVAL then
-      timer = 0
-
-      RS:pickupItem()
-    end
-  end
-end)
-
-
-
-local function putIntoEmptyBankSlot()
-  local bankBags = {-1,5,6,7,8,9,10}
-  for _, bag in ipairs(bankBags) do
-    wipe(containerFreeSlots)
-    GetContainerFreeSlots(bag, containerFreeSlots)
-
-    if count(containerFreeSlots) > 0 then
-      PickupContainerItem(bag, containerFreeSlots[1])
-      RS.splitLoc.bag = bag
-      RS.splitLoc.slot = containerFreeSlots[1]
-      RS.justSplit = true
-      return
-    end
-
-  end
-end
-
-local function pickupSpecificSlot(bag, slot)
-  UseContainerItem(bag, slot)
-  wipe(RS.splitLoc)
-  RS.justSplit = false
-end
-
-
-local function anythingLocked()
-  local bankBags = {-1,5,6,7,8,9,10}
-  local anythingLocked = false
-
-  for _, B in pairs(bankBags) do
-    for S = 1, GetContainerNumSlots(B) do
-      local _, _, locked = GetContainerItemInfo(B, S)
-      if locked then return true end
-    end
-  end
-
-  for B = 0, NUM_BAG_SLOTS do
-    for S = 1, GetContainerNumSlots(B) do
-      local _, _, locked = GetContainerItemInfo(B, S)
-      if locked then return true end
-    end
-  end
-
-  return false
-end
-
-
-
-function RS:pickupItem()
-  if anythingLocked() then return end
-  local bankBags = {-1,5,6,7,8,9,10}
-  local bankBagsReversed = {10,9,8,7,6,5,-1}
-  local currentProfile = Restocker.profiles[Restocker.currentProfile]
-
-  if RS.justSplit then
-    return pickupSpecificSlot(RS.splitLoc.bag, RS.splitLoc.slot)
-  end
-
-  for _, item in ipairs(currentProfile) do
-    local numItemsInBags = GetItemCount(item.itemName, false)
-    local numItemsInBank = GetItemCount(item.itemName, true) - numItemsInBags
-    local restockNum = item.amount
-    local difference = restockNum-numItemsInBags
-
-    if difference > 0 and numItemsInBank > 0 then
-      for _, bag in ipairs(bankBagsReversed) do -- traverse bank bags backwards (helps keeping bank more tidy)
-        for slot = GetContainerNumSlots(bag), 1, -1 do -- traverse bank bag slots backwards
-          local _, stackSize, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
-          if itemLink ~= nil then -- slot contains an item
-            local bitemName = GetItemInfo(itemLink) -- get item name
-
-            if item.itemName == bitemName then -- if item in slot == restock item
-              if difference < stackSize then -- if the restock number is less than the stack size
-                SplitContainerItem(bag, slot, difference) -- split the item
-                putIntoEmptyBankSlot()
-                RS.didBankStuff = true
-                return
-
-              else -- difference >= stackSize
-                UseContainerItem(bag, slot) -- if the restock num is higher than the stack size then just return rightclick that stack
-                RS.didBankStuff = true
-                return
-              end
-
-            end -- itemname == bitemname
-
-          end -- itemname ~= nil
-        end -- for bankslots
-      end -- for bankbags
-      return
-    elseif difference < 0 then -- more of restock item in bags than needed, put excess in bank
-      local posdifference = difference*-1 -- turn negative number to positive
-      for bag = NUM_BAG_SLOTS, 0, -1 do -- loop backwards through bags (helps with maintaining order)
-        for slot = GetContainerNumSlots(bag), 1, -1 do -- loop backward through bagslots
-          local _, stackSize, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
-          if itemLink ~= nil then -- slot contains an item
-            local itemName = GetItemInfo(itemLink)
-            if itemName == item.itemName then -- item in slot is same as restock item
-              RS.didBankStuff = true
-              return UseContainerItem(bag, slot) -- push item from inventory to bank
-              -- do this even if this results in less than the restock amount in bags as it will trigger the
-              -- above code and will grab a partial stack to complete the numbers in inventory
-              -- basically lazy coding which makes the implementation of profiles later easier
-              -- (if you switch profile and want to put all of a certain item to bank)
-            end
-          end -- invitemlink ~= nil
-        end -- for numslots
-      end -- for numbags
-    end
-  end -- for each Restocker.Item
-
-  RS.currentlyRestocking = false
-  if RS.didBankStuff then
-    RS:Print(RS.defaults.prefix .. "finished restocking from bank.")
-  end
-  RS.didBankStuff = false
-end
-
-]]

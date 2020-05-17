@@ -113,19 +113,19 @@ function RS:CreateMenu()
     end)
     editBox:SetScript("OnMouseUp", function(self, button)
       if button == "LeftButton" then
-        infoType, info1 = GetCursorInfo()
+        local infoType, info1 = GetCursorInfo()
         if infoType == "item" then
-          itemName = GetItemInfo(info1)
-          RS:addItem(text)
+          local itemName = GetItemInfo(info1)
+          RS:addItem(itemName)
           ClearCursor()
         end
       end
     end)
     editBox:SetScript("OnReceiveDrag", function(self)
-      infoType, info1 = GetCursorInfo()
+      local infoType, info1 = GetCursorInfo()
       if infoType == "item" then
-        itemName = GetItemInfo(info1)
-        RS:addItem(text)
+        local itemName = GetItemInfo(info1)
+        RS:addItem(itemName)
         ClearCursor()
       end
     end)
@@ -232,9 +232,7 @@ end
 local origChatEdit_InsertLink = ChatEdit_InsertLink;
 ChatEdit_InsertLink = function(link)
   if RS.addon.editBox:IsVisible() and RS.addon.editBox:HasFocus() then
-    --itemName = GetItemInfo(link)
-    RS:addItem(link)
-    return true
+    return RS:addItem(link)
   end
   return origChatEdit_InsertLink(link);
 end

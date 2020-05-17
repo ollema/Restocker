@@ -26,18 +26,16 @@ RS.addonName = "|cff8d63ffRestocker|r "
 function RS:Show()
   local menu = RS.addon or RS:CreateMenu();
   menu:Show()
-  RS:Update()
+  return RS:Update()
 end
 
 
 function RS:Hide()
-  RS.addon:Hide()
+  return RS.addon:Hide()
 end
 
 function RS:Toggle()
-  RS:Show()
-  RS:Hide()
-  RS.addon:SetShown(not RS.addon:IsShown())
+  return RS.addon:SetShown(not RS.addon:IsShown()) or false
 end
 
 
@@ -49,6 +47,7 @@ RS.commands = {
     delete = RS.defaults.slash .. "profile delete [name] - Deletes profile with [name]",
     rename = RS.defaults.slash .. "profile rename [name] - Renames current profile to [name]",
     copy = RS.defaults.slash .. "profile copy [name] - Copies profile [name] into current profile.",
+    config = RS.defaults.slash .. "config - Opens the interface options menu."
   }
 }
 
