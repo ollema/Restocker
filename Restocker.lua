@@ -5,6 +5,8 @@ RS.itemsRestocked = {}
 RS.restockedItems = false
 RS.framepool = {}
 RS.hiddenFrame = CreateFrame("Frame", nil, UIParent):Hide()
+RS.version = GetCVar("agentUID") == "wow_classic" and "classic" or "retail"
+
 
 local list = {}
 
