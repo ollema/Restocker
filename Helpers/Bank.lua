@@ -6,7 +6,7 @@ RS.splitLoc = {}
 
 local BANK_BAGS = {-1,5,6,7,8,9,10}
 local BANK_BAGS_REVERSED = {10,9,8,7,6,5,-1}
-if RS.version == "retail" then
+if REAGENTBANK_CONTAINER then
   tinsert(BANK_BAGS, REAGENTBANK_CONTAINER)
   tinsert(BANK_BAGS_REVERSED, REAGENTBANK_CONTAINER)
 end
