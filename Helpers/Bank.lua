@@ -162,6 +162,7 @@ local function bankTransfer()
             itemsInBags[item.itemName] = itemsInBags[item.itemName] and itemsInBags[item.itemName] - itemCount
             rightClickedItem = true
             transferredToBank = true
+            RS.didBankStuff = true
             --coroutine.yield()
           end
         end
@@ -192,6 +193,7 @@ local function bankTransfer()
               UseContainerItem(bag, slot)
               itemsInBags[item.itemName] = itemsInBags[item.itemName] and itemsInBags[item.itemName] + itemCount or itemCount
               rightClickedItem = true
+              RS.didBankStuff = true
               --coroutine.yield()
             end
           end
@@ -229,6 +231,7 @@ local function bankTransfer()
 
               PutSplitItemIntoBags(item, difference)
 
+              RS.didBankStuff = true
               itemsInBags[item.itemName] = itemsInBags[item.itemName] and itemsInBags[item.itemName] + difference or difference
               hasSplitItems = true
               --coroutine.yield()
@@ -241,7 +244,7 @@ local function bankTransfer()
 
 
   --
-  if rightClickedItem == false and transferredToBank == false and hasSplitItems == false then
+  if rightClickedItem == false and transferredToBank == false and hasSplitItems == false and RS.didBankStuff then
     RS.currentlyRestocking = false
     RS:Print("Finished restocking from bank.")
   end
