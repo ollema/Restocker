@@ -264,16 +264,16 @@ end
 
 function RS:loadSettings()
 
-  Restocker = Restocker or {}
-  Restocker.autoBuy = Restocker.autoBuy == nil and true
-  Restocker.restockFromBank = Restocker.restockFromBank == nil and true
-  Restocker.profiles = Restocker.profiles or {}
-  Restocker.profiles.default = Restocker.profiles.default or {}
-  Restocker.currentProfile = Restocker.currentProfile or "default"
-  Restocker.framePos = Restocker.framePos or {}
-  Restocker.autoOpenAtBank = Restocker.autoOpenAtBank or false
-  Restocker.autoOpenAtMerchant = Restocker.autoOpenAtMerchant or false
-  Restocker.restockFromBank = Restocker.restockFromBank == nil and true
-  Restocker.loginMessage = Restocker.loginMessage == nil and true
-  
+  if Restocker == nil then Restocker = {} end
+  if Restocker.autoBuy == nil then Restocker.autoBuy = true end
+  if Restocker.restockFromBank == nil then Restocker.restockFromBank = true end
+  if Restocker.profiles == nil then Restocker.profiles = {} end
+  if Restocker.profiles.default == nil then Restocker.profiles.default = {} end
+  if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
+  if Restocker.framePos == nil then Restocker.framePos = {} end
+  if Restocker.autoOpenAtBank == nil then Restocker.autoOpenAtBank = false end
+  if Restocker.autoOpenAtMerchant == nil then Restocker.autoOpenAtMerchant = false end
+  if Restocker.restockFromBank == nil then Restocker.restockFromBank = true end
+  if Restocker.loginMessage == nil then Restocker.loginMessage = true end
+
 end
