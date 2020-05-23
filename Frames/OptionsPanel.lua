@@ -15,10 +15,26 @@ function RS:CreateOptionsMenu()
   text:SetPoint("TOPLEFT", optionsPanel, "TOPLEFT", 20, -30)
 
 
+  local loginMessage = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
+  loginMessage:SetSize(25,25)
+  loginMessage:SetPoint("TOPLEFT", text, "BOTTOMLEFT", 10, -15)
+  loginMessage:SetScript("OnClick", function(self, button)
+    Restocker.loginMessage = self:GetChecked()
+  end)
+  loginMessage:SetChecked(Restocker.loginMessage)
+  optionsPanel.loginMessage = loginMessage
+
+  local loginMessageText = loginMessage:CreateFontString(nil, "OVERLAY")
+  loginMessageText:SetFontObject("GameFontNormal")
+  loginMessageText:SetPoint("LEFT", loginMessage, "RIGHT", 3, 0)
+  loginMessageText:SetText("Display login message")
+  optionsPanel.loginMessageText = loginMessageText
+
+
 
   local autoOpenAtMerchant = CreateFrame("CheckButton", nil, optionsPanel, "UICheckButtonTemplate")
   autoOpenAtMerchant:SetSize(25,25)
-  autoOpenAtMerchant:SetPoint("TOPLEFT", text, "BOTTOMLEFT", 10, -25)
+  autoOpenAtMerchant:SetPoint("TOPLEFT", loginMessage, "BOTTOMLEFT", 0, 0)
   autoOpenAtMerchant:SetScript("OnClick", function(self, button)
     Restocker.autoOpenAtMerchant = self:GetChecked()
   end)

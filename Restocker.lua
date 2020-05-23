@@ -259,3 +259,21 @@ function RS:CopyProfile(profileToCopy)
   Restocker.profiles[Restocker.currentProfile] = copyProfile
   RS:Update()
 end
+
+
+
+function RS:loadSettings()
+
+  Restocker = Restocker or {}
+  Restocker.autoBuy = Restocker.autoBuy or true
+  Restocker.restockFromBank = Restocker.restockFromBank or true
+  Restocker.profiles = Restocker.profiles or {}
+  Restocker.profiles.default = Restocker.profiles.default or {}
+  Restocker.currentProfile = Restocker.currentProfile or "default"
+  Restocker.framePos = Restocker.framePos or {}
+  Restocker.autoOpenAtBank = Restocker.autoOpenAtBank or false
+  Restocker.autoOpenAtMerchant = Restocker.autoOpenAtMerchant or false
+  Restocker.restockFromBank = Restocker.restockFromBank or true
+  Restocker.loginMessage = Restocker.loginMessage or true
+  
+end

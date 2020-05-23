@@ -16,37 +16,26 @@ local function count(T)
 end
 
 
-local events = CreateFrame("Frame");
-events:RegisterEvent("ADDON_LOADED");
-events:RegisterEvent("MERCHANT_SHOW");
-events:RegisterEvent("MERCHANT_CLOSED");
-events:RegisterEvent("BANKFRAME_OPENED");
-events:RegisterEvent("BANKFRAME_CLOSED");
-events:RegisterEvent("GET_ITEM_INFO_RECEIVED");
-events:RegisterEvent("PLAYER_LOGOUT");
-events:RegisterEvent("PLAYER_ENTERING_WORLD");
-events:RegisterEvent("UI_ERROR_MESSAGE");
-events:SetScript("OnEvent", function(self, event, ...)
+local E = CreateFrame("Frame");
+E:RegisterEvent("ADDON_LOADED");
+E:RegisterEvent("MERCHANT_SHOW");
+E:RegisterEvent("MERCHANT_CLOSED");
+E:RegisterEvent("BANKFRAME_OPENED");
+E:RegisterEvent("BANKFRAME_CLOSED");
+E:RegisterEvent("GET_ITEM_INFO_RECEIVED");
+E:RegisterEvent("PLAYER_LOGOUT");
+E:RegisterEvent("PLAYER_ENTERING_WORLD");
+E:RegisterEvent("UI_ERROR_MESSAGE");
+E:SetScript("OnEvent", function(self, event, ...)
   return self[event] and self[event](self, ...)
 end)
 
-function events:ADDON_LOADED(name)
+function E:ADDON_LOADED(name)
   if name ~= "Restocker" then return end
 
 
   -- NEW RESTOCKER
-  if not Restocker then
-    Restocker = {}
-    Restocker.autoBuy = true
-    Restocker.restockFromBank = true
-    Restocker.profiles = {}
-    Restocker.profiles.default = {}
-    Restocker.currentProfile = "default"
-    Restocker.framePos = {}
-    Restocker.autoOpenAtBank = false
-    Restocker.autoOpenAtMerchant = false
-    Restocker.restockFromBank = true
-  end
+  RS:loadSettings()
 
   for profile, _ in pairs(Restocker.profiles) do
     for _, item in ipairs(Restocker.profiles[profile]) do
@@ -74,14 +63,14 @@ function events:ADDON_LOADED(name)
   RS.loaded = true
 end
 
-function events:PLAYER_ENTERING_WORLD(login, reloadui)
+function E:PLAYER_ENTERING_WORLD(login, reloadui)
   if not RS.loaded then return end
-  if login or reloadui then
-    --print(RS.addonName .. "loaded. "..RS.slashPrefix.."for settings.")
+  if (login or reloadui) and Restocker.loginMessage then
+    print(RS.addonName .. "loaded.")
   end
 end
 
-function events:MERCHANT_SHOW()
+function E:MERCHANT_SHOW()
   RS.buying = true
   if not Restocker.autoBuy then return end -- If not autobuying then return
   if IsShiftKeyDown() then return end -- If shiftkey is down return
@@ -163,14 +152,14 @@ function events:MERCHANT_SHOW()
 end
 
 
-function events:MERCHANT_CLOSED(event, ...)
+function E:MERCHANT_CLOSED(event, ...)
   RS.merchantIsOpen = false
   RS:Hide()
 end
 
 
 
-function events:BANKFRAME_OPENED(event, ...)
+function E:BANKFRAME_OPENED(event, ...)
   if IsShiftKeyDown() then return end
   if not Restocker.restockFromBank then return end
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
@@ -182,14 +171,14 @@ function events:BANKFRAME_OPENED(event, ...)
 end
 
 function RS:BANKFRAME_OPENED()
-  events:BANKFRAME_OPENED()
+  E:BANKFRAME_OPENED()
 end
 
 function RS:MERCHANT_SHOW()
-  events:MERCHANT_SHOW()
+  E:MERCHANT_SHOW()
 end
 
-function events:BANKFRAME_CLOSED(event, ...)
+function E:BANKFRAME_CLOSED(event, ...)
   RS.bankIsOpen = false
   RS.currentlyRestocking = false
   RS:Hide()
@@ -198,7 +187,7 @@ end
 
 
 
-function events:GET_ITEM_INFO_RECEIVED(itemID, success)
+function E:GET_ITEM_INFO_RECEIVED(itemID, success)
   if success == nil then return end
   if RS.itemWaitTable[itemID] then
     RS.itemWaitTable[itemID] = nil
@@ -208,7 +197,7 @@ end
 
 
 
-function events:PLAYER_LOGOUT()
+function E:PLAYER_LOGOUT()
   if Restocker.framePos == nil then Restocker.framePos = {} end
 
   RS:Show()
@@ -223,7 +212,7 @@ function events:PLAYER_LOGOUT()
 end
 
 
-function events:UI_ERROR_MESSAGE(id, message)
+function E:UI_ERROR_MESSAGE(id, message)
   if id == 2 or id == 3 then -- catch inventory / bank full error messages
     RS.currentlyRestocking = false
     RS.buying = false
