@@ -77,7 +77,7 @@ end
 function events:PLAYER_ENTERING_WORLD(login, reloadui)
   if not RS.loaded then return end
   if login or reloadui then
-    print(RS.addonName .. "loaded. "..RS.slashPrefix.."for settings.")
+    --print(RS.addonName .. "loaded. "..RS.slashPrefix.."for settings.")
   end
 end
 
