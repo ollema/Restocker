@@ -274,6 +274,6 @@ function RS:loadSettings()
   Restocker.autoOpenAtBank = Restocker.autoOpenAtBank or false
   Restocker.autoOpenAtMerchant = Restocker.autoOpenAtMerchant or false
   Restocker.restockFromBank = Restocker.restockFromBank or true
-  Restocker.loginMessage = Restocker.loginMessage or true
+  Restocker.loginMessage = Restocker.loginMessage ~= nil and Restocker.loginMessage or true
   
 end

@@ -66,7 +66,7 @@ end
 function E:PLAYER_ENTERING_WORLD(login, reloadui)
   if not RS.loaded then return end
   if (login or reloadui) and Restocker.loginMessage then
-    print(RS.addonName .. "loaded.")
+    print(RS.addonName .. "loaded")
   end
 end
 
