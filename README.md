@@ -13,7 +13,7 @@ Example: PVE profile has all potions/elixirs and their respective number to rest
 
 ### Restocks from
 - Vendor
-- Bank
+- Bank *(Hold shift to temp disable restocking)*
 
  
 
