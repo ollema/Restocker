@@ -267,13 +267,15 @@ function RS:loadSettings()
   if Restocker == nil then Restocker = {} end
   if Restocker.autoBuy == nil then Restocker.autoBuy = true end
   if Restocker.restockFromBank == nil then Restocker.restockFromBank = true end
+
   if Restocker.profiles == nil then Restocker.profiles = {} end
   if Restocker.profiles.default == nil then Restocker.profiles.default = {} end
   if Restocker.currentProfile == nil then Restocker.currentProfile = "default" end
+
   if Restocker.framePos == nil then Restocker.framePos = {} end
+  
   if Restocker.autoOpenAtBank == nil then Restocker.autoOpenAtBank = false end
   if Restocker.autoOpenAtMerchant == nil then Restocker.autoOpenAtMerchant = false end
-  if Restocker.restockFromBank == nil then Restocker.restockFromBank = true end
   if Restocker.loginMessage == nil then Restocker.loginMessage = true end
 
 end
