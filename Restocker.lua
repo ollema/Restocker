@@ -238,7 +238,7 @@ function RS:ChangeProfile(newProfile)
   Restocker.currentProfile = newProfile
 
   UIDropDownMenu_SetText(RS.addon.profileDropDownMenu, Restocker.currentProfile)
-  print(RS.defaults.prefix .. "current profile: ".. Restocker.currentProfile)
+  --print(RS.defaults.prefix .. "current profile: ".. Restocker.currentProfile)
   RS:Update()
   
   if RS.bankIsOpen then

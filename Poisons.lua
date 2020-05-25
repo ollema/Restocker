@@ -98,7 +98,7 @@ RS.poisons = {
 
 function RS:getPoisonReagents()
   if select(2, UnitClass("PLAYER")) ~= "ROGUE" then return {} end
-  
+
   local T = {}
   for _, item in ipairs(Restocker.profiles[Restocker.currentProfile]) do
     if string.find(item.itemName, "Poison") then
