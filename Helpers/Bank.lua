@@ -89,9 +89,8 @@ local function GetItemsInBags()
   for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
     for slot = 1, GetContainerNumSlots(bag) do
       local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+      local itemName = itemLink and string.match(itemLink, "%[(.*)%]")
       if itemID then
-        local itemName = GetItemInfo(itemID)
-
         T[itemName] = T[itemName] and T[itemName] + itemCount or itemCount
       end
     end
@@ -144,14 +143,15 @@ local function bankTransfer()
   --
   --  INVENTORY
   --
-  for bag = NUM_BAG_SLOTS, 0, -1 do
+  for bag = NUM_BAG_SLOTS, BACKPACK_CONTAINER, -1 do
     for slot = GetContainerNumSlots(bag), 1, -1 do
-      local _, itemCount, locked, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
+      local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+      local itemName = itemLink and string.match(itemLink, "%[(.*)%]")
       if itemID then
-        local inRestockList = IsItemInRestockList(itemID)
+        local inRestockList = IsItemInRestockList(itemName)
 
         if not locked and inRestockList then
-          local item = currentProfile[GetRestockItemIndex(itemID)]
+          local item = currentProfile[GetRestockItemIndex(itemName)]
           local numInBags = itemsInBags[item.itemName] or 0
           local restockNum = item.amount
           local difference = restockNum-numInBags
@@ -178,12 +178,13 @@ local function bankTransfer()
   if not transferredToBank then
     for _, bag in ipairs(BANK_BAGS_REVERSED) do
       for slot = GetContainerNumSlots(bag), 1, -1 do
-        local _, itemCount, locked, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local itemName = itemLink and string.match(itemLink, "%[(.*)%]")
         if itemID and not locked then
-          local inRestockList = IsItemInRestockList(itemID)
+          local inRestockList = IsItemInRestockList(itemName)
 
           if not locked and inRestockList then
-            local item = currentProfile[GetRestockItemIndex(itemID)]
+            local item = currentProfile[GetRestockItemIndex(itemName)]
             local numInBags = itemsInBags[item.itemName] or 0
             local restockNum = item.amount
             local difference = restockNum-numInBags
@@ -207,14 +208,15 @@ local function bankTransfer()
   if not rightClickedItem then
     for _, bag in ipairs(BANK_BAGS_REVERSED) do
       for slot = GetContainerNumSlots(bag), 1, -1 do
-        local _, itemCount, locked, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local itemName = itemLink and string.match(itemLink, "%[(.*)%]")
 
         if itemID and not locked then
-          local inRestockList = IsItemInRestockList(itemID)
-          local itemStackSize = select(8, GetItemInfo(itemID))
+          local inRestockList = IsItemInRestockList(itemName)
+          local itemStackSize = select(8, GetItemInfo(itemName))
 
           if inRestockList then
-            local item = currentProfile[GetRestockItemIndex(itemID)]
+            local item = currentProfile[GetRestockItemIndex(itemName)]
             local numInBags = itemsInBags[item.itemName] or 0
             local restockNum = item.amount
             local difference = restockNum-numInBags
@@ -243,8 +245,8 @@ local function bankTransfer()
   end -- not right clicked an item
 
 
-  --
-  if rightClickedItem == false and transferredToBank == false and hasSplitItems == false and RS.didBankStuff then
+
+  if rightClickedItem == false and transferredToBank == false and hasSplitItems == false and RS.didBankStuff and RS.minorChange == false then
     RS.currentlyRestocking = false
     RS:Print("Finished restocking from bank.")
   end
@@ -258,20 +260,22 @@ restockerCoroutine = coroutine.create(bankTransfer)
 -- OnUpdate frame
 --
 
-local onUpdateFrame = CreateFrame("Frame")
-local ONUPDATE_INTERVAL = 0.05
+RS.onUpdateFrame = CreateFrame("Frame")
+local ONUPDATE_INTERVAL = 0.1
 local timer = 0
 
-onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
+RS.onUpdateFrame:SetScript("OnUpdate", function(self, elapsed)
   timer = timer+elapsed
-  if RS.currentlyRestocking then
-      timer = 0
-      if somethingLocked() and not CursorHasItem() then return end
-      if coroutine.status(restockerCoroutine) == "running" then return end
+  if timer >= ONUPDATE_INTERVAL then
+    timer = 0
+    if RS.currentlyRestocking then
+        if somethingLocked() and not CursorHasItem() then return end
+        if coroutine.status(restockerCoroutine) == "running" then return end
 
-      local resume = coroutine.resume(restockerCoroutine)
-      if resume == false then
-        restockerCoroutine = coroutine.create(bankTransfer)
-      end
+        local resume = coroutine.resume(restockerCoroutine)
+        if resume == false then
+          restockerCoroutine = coroutine.create(bankTransfer)
+        end
+    end
   end
 end)
