@@ -115,8 +115,8 @@ function RS:CreateMenu()
       if button == "LeftButton" then
         local infoType, info1 = GetCursorInfo()
         if infoType == "item" then
-          local itemName = GetItemInfo(info1)
-          RS:addItem(itemName)
+          local _, itemLink = GetItemInfo(info1)
+          RS:addItem(itemLink)
           ClearCursor()
         end
       end
@@ -124,8 +124,8 @@ function RS:CreateMenu()
     editBox:SetScript("OnReceiveDrag", function(self)
       local infoType, info1 = GetCursorInfo()
       if infoType == "item" then
-        local itemName = GetItemInfo(info1)
-        RS:addItem(itemName)
+        local _, itemLink = GetItemInfo(info1)
+        RS:addItem(itemLink)
         ClearCursor()
       end
     end)
