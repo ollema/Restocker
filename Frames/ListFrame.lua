@@ -58,6 +58,9 @@ function RS:addListFrame()
     editBox:ClearFocus()
     self:SetText(tonumber(amount));
     RS:Update()
+    if RS.bankIsOpen then
+      RS:BANKFRAME_OPENED(true)
+    end
 
   end);
   editBox:SetScript("OnKeyUp", function(self)
