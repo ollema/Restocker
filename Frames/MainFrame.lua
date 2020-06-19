@@ -113,19 +113,17 @@ function RS:CreateMenu()
     end)
     editBox:SetScript("OnMouseUp", function(self, button)
       if button == "LeftButton" then
-        local infoType, info1 = GetCursorInfo()
+        local infoType, _, info2 = GetCursorInfo()
         if infoType == "item" then
-          local _, itemLink = GetItemInfo(info1)
-          RS:addItem(itemLink)
+          RS:addItem(info2)
           ClearCursor()
         end
       end
     end)
     editBox:SetScript("OnReceiveDrag", function(self)
-      local infoType, info1 = GetCursorInfo()
+      local infoType, _, info2 = GetCursorInfo()
       if infoType == "item" then
-        local _, itemLink = GetItemInfo(info1)
-        RS:addItem(itemLink)
+        RS:addItem(info2)
         ClearCursor()
       end
     end)
