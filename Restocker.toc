@@ -2,7 +2,7 @@
 ## Title: |cff8d63ffRestocker|r
 ## Author: RainForDays
 ## Notes: Restock items automatically
-## Version: 6.1
+## Version: 6.2
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: Restocker
 
