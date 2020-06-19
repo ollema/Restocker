@@ -152,33 +152,40 @@ function E:MERCHANT_SHOW()
 end
 
 
-function E:MERCHANT_CLOSED(event, ...)
+function E:MERCHANT_CLOSED()
   RS.merchantIsOpen = false
   RS:Hide()
 end
 
 
 
-function E:BANKFRAME_OPENED(event, ...)
+function E:BANKFRAME_OPENED(isMinor)
   if IsShiftKeyDown() then return end
   if not Restocker.restockFromBank then return end
   if Restocker.profiles[Restocker.currentProfile] == nil then return end
 
   if Restocker.autoOpenAtBank then RS:Show() end
 
+  if isMinor then
+    RS.minorChange = true
+  else
+    RS.minorChange = false
+  end
+  RS.didBankStuff = false
   RS.bankIsOpen = true
   RS.currentlyRestocking = true
+  RS.onUpdateFrame:Show()
 end
 
-function RS:BANKFRAME_OPENED()
-  E:BANKFRAME_OPENED()
+function RS:BANKFRAME_OPENED(bool)
+  E:BANKFRAME_OPENED(not not bool)
 end
 
 function RS:MERCHANT_SHOW()
   E:MERCHANT_SHOW()
 end
 
-function E:BANKFRAME_CLOSED(event, ...)
+function E:BANKFRAME_CLOSED()
   RS.bankIsOpen = false
   RS.currentlyRestocking = false
   RS:Hide()
