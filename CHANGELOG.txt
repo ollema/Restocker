@@ -1,3 +1,8 @@
+6.2
+- Now restocks items with random suffixes
+- Now restocks items as soon as you press enter when changing restocking number on the main window while bank is open
+- Reduced chat-spam when changing profiles at the bank.
+
 6.1
 - Added login message setting
 
