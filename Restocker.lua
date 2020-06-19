@@ -242,7 +242,7 @@ function RS:ChangeProfile(newProfile)
   RS:Update()
   
   if RS.bankIsOpen then
-    RS:BANKFRAME_OPENED()
+    RS:BANKFRAME_OPENED(true)
   end
 
   if RS.merchantIsOpen then
