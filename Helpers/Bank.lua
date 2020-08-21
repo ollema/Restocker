@@ -248,6 +248,28 @@ local function bankTransfer()
 
   if rightClickedItem == false and transferredToBank == false and hasSplitItems == false and RS.didBankStuff and RS.minorChange == false then
     RS.currentlyRestocking = false
+    
+    --print info
+    for bag = NUM_BAG_SLOTS, BACKPACK_CONTAINER, -1 do
+      for slot = GetContainerNumSlots(bag), 1, -1 do
+        local _, itemCount, locked, _, _, _, itemLink, _, _, itemID = GetContainerItemInfo(bag, slot)
+        local itemName = itemLink and string.match(itemLink, "%[(.*)%]")
+        if itemID then
+          local inRestockList = IsItemInRestockList(itemName)
+
+          if not locked and inRestockList then
+            local item = currentProfile[GetRestockItemIndex(itemName)]
+            local numInBags = itemsInBags[item.itemName] or 0
+            local restockNum = item.amount
+            local difference = restockNum-numInBags
+            if difference > 0 then
+              RS:Print("Missing at least " .. difference .. " " .. itemName)
+            end
+          end
+        end -- if item we should get and its not locked
+      end -- for slot
+    end -- for bag
+    
     RS:Print("Finished restocking from bank.")
   end
 end
